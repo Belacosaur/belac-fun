@@ -1,0 +1,37 @@
+{
+  "name": "@belac/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "node --experimental-strip-types src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --outfile=dist/server.js --external:pg --external:fastify --external:@fastify/cors --external:@fastify/helmet --external:@fastify/rate-limit --external:@fastify/swagger --external:zod --external:decimal.js --external:jose --external:drizzle-orm",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@belac/config": "workspace:*",
+    "@belac/db": "workspace:*",
+    "@belac/jobs": "workspace:*",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/swagger": "^9.5.2",
+    "decimal.js": "^10.6.0",
+    "drizzle-orm": "^0.44.6",
+    "fastify": "^5.6.1",
+    "jose": "^6.1.0",
+    "pg": "^8.16.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^10.28.0",
+    "@types/node": "^22.18.8",
+    "@types/pg": "^8.15.5",
+    "testcontainers": "^10.28.0",
+    "esbuild": "^0.25.10",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

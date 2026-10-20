@@ -1,0 +1,4 @@
+{
+  "transaction": { "signatures": ["sig-unknown"] },
+  "meta": { "logMessages": ["Program 11111111111111111111111111111111 invoke [1]"] }
+}

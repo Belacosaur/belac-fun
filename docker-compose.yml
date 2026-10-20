@@ -1,0 +1,10 @@
+# Local development only. These credentials are not for any shared or cloud database.
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: belac
+      POSTGRES_PASSWORD: belac
+      POSTGRES_DB: belac

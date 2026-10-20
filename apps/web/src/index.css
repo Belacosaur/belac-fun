@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0e0d0b;
+  --surface: #191714;
+  --surface-elevated: #24211d;
+  --border: #39342e;
+  --text-primary: #f7f2e9;
+  --text-secondary: #b9b1a5;
+  --accent: #f3ae43;
+  --positive: #6bdf96;
+  --negative: #ff7a79;
+  --info: #c0abff;
+  --focus: #ffe7a3;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.site-nav {
+  display: none;
+}
+
+.site-nav.open {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .menu-button {
+    display: none;
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 12px;
+  }
+}
