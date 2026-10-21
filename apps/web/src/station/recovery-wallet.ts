@@ -75,7 +75,7 @@ export async function verifyOwnerScan(p:RecoveryPlan,minContextSlot:number,readT
  check(seen.size===p.before.accounts.length,"Owner token account set changed; refresh");return slot;
 }
 export async function verifyRecoveryContext(p:RecoveryPlan,readToken?:string){
- await validateRecoveryPlan(p);check(await recoveryRpc("getGenesisHash",[])==="5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d");
+ const message=await validateRecoveryPlan(p);check(await recoveryRpc("getGenesisHash",[])==="5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d");
  check(BigInt(await recoveryRpc<number>("getBlockHeight",[{commitment:"confirmed"}],readToken))<=BigInt(p.lastValidBlockHeight));
  const keys=[SOURCE,DEST,USA,WSA,CTA,POS,MINT,NFT,POOL,...p.before.accounts.map(a=>a.address)].filter((v,i,a)=>a.indexOf(v)===i);
  const live=await recoveryRpc<{context:{slot:number};value:(Account|null)[]}>("getMultipleAccounts",[keys,{encoding:"base64",commitment:"confirmed",minContextSlot:p.slot}]);
@@ -93,7 +93,7 @@ export async function verifyRecoveryContext(p:RecoveryPlan,readToken?:string){
  }
  if(p.step==="swap")check(BigInt(p.minimumSolAtoms)>=BigInt(p.before.usdcAtoms)*Q*Q/(sqrt*sqrt)*99n/100n,"Swap minimum is too low");
  const fee=await recoveryRpc<{value:number}>("getFeeForMessage",[encode64(k.getTransactionDecoder().decode(decode64(p.wireBase64)).messageBytes),{commitment:"confirmed"}]);check(String(fee.value)===p.feeLamports);
- const sim=await simulateRecoveryAccounts<Account>((method,params)=>recoveryRpc(method,params,readToken),p.wireBase64,keys,minSlot);
+ const sim=await simulateRecoveryAccounts<Account>((method,params)=>recoveryRpc(method,params,readToken),p.wireBase64,keys,minSlot,message.staticAccounts.length);
  check(sim.value.err===null,"Fresh browser simulation failed");const post=sim.value.accounts;
  check(String(post[1]?.lamports??0)===(p.step==="sweep"?(BigInt(p.before.destinationLamports)+BigInt(p.before.sourceLamports)-BigInt(p.feeLamports)).toString():p.before.destinationLamports));
  if(p.step==="orca")check(closed(post[5]!)&&closed(post[6]!)&&closed(post[7]!)&&amount(post[2]!,USDC)>=BigInt(p.before.usdcAtoms)+BigInt(p.minimumUsdcAtoms)&&amount(post[3]!,SOL)>=BigInt(p.before.wsolAtoms)+BigInt(p.minimumSolAtoms));

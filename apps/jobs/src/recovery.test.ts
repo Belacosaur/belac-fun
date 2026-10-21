@@ -26,7 +26,7 @@ it("prepares an unsigned final sweep only after both owner scans are empty and d
    const tx=k.getTransactionDecoder().decode(Buffer.from(q.params[0],"base64")),m=k.getCompiledTransactionMessageDecoder().decode(tx.messageBytes);
    expect(m.instructions).toHaveLength(1);expect(m.staticAccounts.slice(0,2)).toEqual([CHALLENGE_WALLET,RECOVERY_DESTINATION]);
    expect(Buffer.from(m.instructions[0]!.data!).readBigUInt64LE(4)).toBe(BigInt(source-fee));
-   const addresses=q.params[1].accounts.addresses as string[];expect(addresses.length).toBeLessThanOrEqual(5);
+   const addresses=q.params[1].accounts.addresses as string[];expect(addresses.length).toBeLessThanOrEqual(m.staticAccounts.length);
    result={context:{slot:200},value:{err:null,accounts:addresses.map(a=>a===RECOVERY_DESTINATION?account(source-fee):null),logs:[]}};
   }else throw new Error(`Unexpected RPC ${q.method}`);
   return new Response(JSON.stringify({result}));

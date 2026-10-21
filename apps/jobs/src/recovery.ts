@@ -119,7 +119,7 @@ export async function buildRecoveryPlan(id: string, endpoint: string, fetcher: t
   assert.equal(message.header.numSignerAccounts,1); assert.equal(message.staticAccounts[0],RECOVERY_SOURCE);
   const wire = Buffer.concat([Buffer.from([1]),Buffer.alloc(64),bytes]); assert(wire.length<=1232,"Recovery transaction exceeds packet size");
   const extra = closed.filter(a=>!RECOVERY_KEYS.includes(a)); const simKeys=[...RECOVERY_KEYS,...extra];
-  const sim=await simulateRecoveryAccounts<Account>(rpc,wire.toString("base64"),simKeys,b.context.slot);
+  const sim=await simulateRecoveryAccounts<Account>(rpc,wire.toString("base64"),simKeys,b.context.slot,message.staticAccounts.length);
   const after = inventory(sim.value.accounts.slice(0,8),sim.context.slot,step==="cleanup"?[]:undefined);
   assert.equal(after.destinationLamports,step==="sweep"?(BigInt(before.destinationLamports)+BigInt(before.sourceLamports)-BigInt(fee)).toString():before.destinationLamports);
   if(step==="orca"){assert(!after.orcaOpen);assert(BigInt(after.usdcAtoms)>=BigInt(before.usdcAtoms)+minimumUsdc);assert(BigInt(after.wsolAtoms)>=BigInt(before.wsolAtoms)+minimumSol);}
