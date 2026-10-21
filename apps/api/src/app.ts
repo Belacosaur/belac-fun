@@ -9,6 +9,9 @@ import { registerSecurity } from "./security.js";
 import { registerStudioRoutes } from "./studio-routes.js";
 import { registerResearchRoutes } from "./research-routes.js";
 import { registerTradeRoutes } from "./trade-routes.js";
+import {registerRecoveryRoutes} from "./recovery-routes.js";
+import {RecoveryStore} from "../../jobs/src/recovery-store.js";
+import {TradeStore} from "../../jobs/src/trade-store.js";
 
 export type ApiEnv = {
   APP_ENV?: string;
@@ -22,6 +25,8 @@ export type ApiEnv = {
   R2_BUCKET?: string;
   R2_ACCOUNT_ID?: string;
   EXPERIMENT_WALLET_ADDRESS?: string;
+  SOLANA_RPC_URL?: string;
+  RECOVERY_MODE?: string;
 };
 
 declare module "fastify" {
@@ -88,7 +93,8 @@ export function buildApp(env: ApiEnv = process.env): FastifyInstance {
     registerPublicRoutes(instance, pool);
     registerStudioRoutes(instance, pool, env.EXPERIMENT_WALLET_ADDRESS);
     registerResearchRoutes(instance, pool, env.EXPERIMENT_WALLET_ADDRESS, env);
-    registerTradeRoutes(instance, pool, env.ALLOWED_ORIGINS ?? "");
+    registerTradeRoutes(instance, pool, env.ALLOWED_ORIGINS ?? "",undefined,env.RECOVERY_MODE==="true");
+    registerRecoveryRoutes(instance,pool?new TradeStore(pool):null,pool?new RecoveryStore(pool,env.SOLANA_RPC_URL||"https://solana-rpc.publicnode.com"):null,env.ALLOWED_ORIGINS??"");
     registerAdminRoutes(instance, pool, env);
   });
 

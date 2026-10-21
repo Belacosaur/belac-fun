@@ -5,7 +5,7 @@ import { TradeStore } from "../../jobs/src/trade-store.js";
 import { CHALLENGE_WALLET } from "../../../packages/contracts/src/trades.js";
 const idSchema = z.string().uuid(), key = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
 type Store = Pick<TradeStore, "challenge" | "login" | "authorized" | "latest" | "create" | "get" | "begin" | "register" | "cancel">;
-export function registerTradeRoutes(app: FastifyInstance, pool: pg.Pool | null, allowedOrigins: string, storeOverride?: Store) {
+export function registerTradeRoutes(app: FastifyInstance, pool: pg.Pool | null, allowedOrigins: string, storeOverride?: Store, recoveryMode = false) {
   const store = storeOverride ?? (pool ? new TradeStore(pool) : null), origins = allowedOrigins.split(",").map(s => s.trim()).filter(Boolean);
   app.register(async instance => {
     instance.addHook("onRequest", async (req, reply) => {
@@ -24,12 +24,14 @@ export function registerTradeRoutes(app: FastifyInstance, pool: pg.Pool | null, 
     });
     instance.get("/v1/trades/meteora/latest", async () => ({ data: await store!.latest() }));
     instance.post("/v1/trades/meteora/prepare", async (req, reply) => {
+      if(recoveryMode)return reply.code(403).send({error:"New entries are disabled during wallet recovery"});
       const b = z.object({ mint: key, station: z.literal(5), budgetUsdc: z.literal("10") }).strict().parse(req.body);
       if ([CHALLENGE_WALLET, "So11111111111111111111111111111111111111112", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"].includes(b.mint)) return reply.code(400).send({ error: "Invalid position mint" });
       try { return { data: await store!.create(b.mint) }; } catch { return reply.code(409).send({ error: "An existing Meteora attempt or position is reserved. Review it before preparing another." }); }
     });
     instance.get("/v1/trades/meteora/:id", async (req, reply) => { const id = idSchema.parse((req.params as { id: string }).id); const a = await store!.get(id); return a ? { data: a } : reply.code(404).send({ error: "Attempt not found" }); });
     instance.post("/v1/trades/meteora/:id/begin", async (req, reply) => {
+      if(recoveryMode)return reply.code(403).send({error:"New-entry signatures are disabled during wallet recovery"});
       const id = idSchema.parse((req.params as { id: string }).id);
       try { return { data: await store!.begin(id) }; } catch { return reply.code(409).send({ error: "Plan expired or already claimed. Refresh before signing." }); }
     });

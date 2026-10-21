@@ -1,0 +1,60 @@
+import {useCallback,useEffect,useRef,useState} from "react";
+import {getWallets} from "@wallet-standard/app";
+import type {Wallet,WalletAccount} from "@wallet-standard/base";
+import {RECOVERY_SOURCE,RECOVERY_DESTINATION,type RecoveryAttempt,type RecoveryInventory,type RecoveryStep} from "../../../../packages/contracts/src/recovery";
+import {decode64,encode64} from "./trade-wallet";
+import {recoveryRpc,validateRecoveryPlan,verifyRecoveryContext,verifyRecoverySignature} from "./recovery-wallet";
+import "./recovery.css";
+const api=(import.meta.env.VITE_API_BASE_URL||"https://belac-fun-production-c49e.up.railway.app").replace(/\/$/,"");
+const sol=(s:string|undefined)=>(Number(s??0)/1e9).toFixed(9),usdc=(s:string|undefined)=>(Number(s??0)/1e6).toFixed(6);
+const steps:Record<RecoveryStep,string>={orca:"Close Orca",kamino:"Redeem Kamino",swap:"Convert USDC to SOL",cleanup:"Unwrap SOL and reclaim rent",sweep:"Sweep to the new wallet"};
+type Status={inventory:RecoveryInventory;attempt:RecoveryAttempt|null;history:{id:string;state:string;step:RecoveryStep;signature:string|null;receipt?:{feeLamports:string;rentRecoveredLamports:string}|null}[]};
+type Features={"standard:connect":{connect():Promise<{accounts:readonly WalletAccount[]}>};"solana:signMessage":{signMessage(input:{account:WalletAccount;message:Uint8Array}):Promise<readonly {signature:Uint8Array}[]>};"solana:signTransaction":{signTransaction(input:{account:WalletAccount;transaction:Uint8Array;chain:"solana:mainnet"}):Promise<readonly {signedTransaction:Uint8Array}[]>}};
+export function Recovery(){
+ const [wallets,setWallets]=useState<readonly Wallet[]>([]),[selection,setSelection]=useState("");
+ const [connection,setConnection]=useState<{wallet:Wallet;account:WalletAccount;token:string}|null>(null),[status,setStatus]=useState<Status|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState(""),[now,setNow]=useState(Date.now());
+ const lock=useRef(false),blocked=useRef(false),mounted=useRef(true);
+ useEffect(()=>{mounted.current=true;document.title="Exit and recover — Belac.fun";const registry=getWallets(),update=()=>setWallets(registry.get().filter(w=>["standard:connect","solana:signMessage","solana:signTransaction"].every(f=>f in w.features)));update();const a=registry.on("register",update),b=registry.on("unregister",update),timer=setInterval(()=>setNow(Date.now()),1000);return()=>{mounted.current=false;blocked.current=true;a();b();clearInterval(timer);};},[]);
+ async function request<T>(path:string,token?:string,body?:unknown):Promise<T>{
+  const r=await fetch(`${api}/v1/${path}`,{method:body?"POST":"GET",headers:{...(token?{authorization:`Bearer ${token}`}:{ }),...(body?{"content-type":"application/json"}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(60000)});const j=await r.json();if(!r.ok)throw new Error(typeof j.error==="string"?j.error:j.error?.message??"Recovery unavailable");return j.data as T;
+ }
+ const refresh=useCallback(async(token:string)=>{const data=await request<Status>("recovery/status",token);if(mounted.current)setStatus(data);},[]);
+ async function run(action:()=>Promise<void>){if(lock.current)return;lock.current=true;setBusy(true);setError("");try{await action();}catch(e){if(mounted.current)setError(e instanceof Error?e.message:"Recovery action failed");}finally{lock.current=false;if(mounted.current)setBusy(false);}}
+ async function connect(){await run(async()=>{
+  const wallet=wallets.find(w=>w.name===selection)??wallets[0];if(!wallet)throw new Error("Enable Solflare in this browser and reload");const f=wallet.features as unknown as Features,result=await f["standard:connect"].connect(),account=result.accounts.find(a=>a.address===RECOVERY_SOURCE);
+  if(!account)throw new Error(`Select the OLD challenge account ending qfH5TBx8j in Solflare. The new wallet receives the final SOL but cannot authorize withdrawals from the old wallet.`);
+  const challenge=await request<{id:string;message:string}>("trades/wallet/challenge",undefined,{wallet:RECOVERY_SOURCE});const signatures=await f["solana:signMessage"].signMessage({account,message:new TextEncoder().encode(challenge.message)});
+  const session=await request<{token:string}>("trades/wallet/session",undefined,{id:challenge.id,signature:encode64(signatures[0]!.signature)});blocked.current=false;setConnection({wallet,account,token:session.token});await refresh(session.token);
+ });}
+ useEffect(()=>{if(!connection)return;const events=connection.wallet.features["standard:events"] as {on(event:string,fn:()=>void):()=>void}|undefined;const off=events?.on("change",()=>{blocked.current=true;setConnection(null);setError("Wallet changed. Reconnect the old wallet; any submitted transaction remains tracked.");});const timer=setInterval(()=>{if(!lock.current)void refresh(connection.token).catch(e=>setError(e instanceof Error?e.message:"Status unavailable"));},10000);return()=>{off?.();clearInterval(timer);};},[connection,refresh]);
+ async function prepare(){if(!connection)return;await run(async()=>{const attempt=await request<RecoveryAttempt>("recovery/prepare",connection.token,{});if(attempt.plan)await validateRecoveryPlan(attempt.plan);await refresh(connection.token);});}
+ async function execute(){if(!connection||!status?.attempt?.plan)return;const c=connection,a=status.attempt,p=a.plan!;
+  await run(async()=>{
+   if(blocked.current||!c.wallet.accounts.some(x=>x.address===RECOVERY_SOURCE))throw new Error("Old wallet disconnected");
+   await verifyRecoveryContext(p,c.token);await request(`recovery/${a.id}/begin`,c.token,{messageHash:p.messageHash});setStatus({...status,attempt:{...a,state:"signing"}});
+   const f=c.wallet.features as unknown as Features;const result=await f["solana:signTransaction"].signTransaction({account:c.account,transaction:decode64(p.wireBase64),chain:"solana:mainnet"});
+   if(blocked.current||!mounted.current)throw new Error("Wallet session changed. No transaction was submitted by this page.");
+   if(Date.now()>=Date.parse(p.expiresAt))throw new Error("Plan expired while the wallet was open. Nothing was submitted; wait for the attempt to expire.");
+   const wire=result[0]!.signedTransaction,signature=await verifyRecoverySignature(p,wire);
+   await request(`recovery/${a.id}/signature`,c.token,{signature,messageHash:p.messageHash});
+   setStatus({...status,attempt:{...a,state:"submitted",signature}});
+   // Registration happens before browser broadcast, so a disconnect never loses the public signature.
+   await verifyRecoveryContext(p,c.token);if(Date.now()>=Date.parse(p.expiresAt))throw new Error("Quote expired before broadcast; the saved attempt will expire without an automatic retry");
+   const sent=await recoveryRpc<string>("sendTransaction",[encode64(wire),{encoding:"base64",skipPreflight:false,preflightCommitment:"confirmed",minContextSlot:p.slot,maxRetries:3}]);
+   if(sent!==signature)throw new Error("RPC response differs from saved signature. Wait for chain verification before doing anything else.");await refresh(c.token);
+  });
+ }
+ const attempt=status?.attempt,plan=attempt?.plan,held=!!attempt&&["preparing","signing","submitted"].includes(attempt.state),expired=!!plan&&now>=Date.parse(plan.expiresAt);
+ return <main className="recovery-page"><header><a href="/station">BELAC.FUN ✳</a><span>OWNER RECOVERY · AUTOMATION OFF</span></header>
+  <section className="recovery-intro"><p className="recovery-kicker">CLOSE · CONVERT · RECOVER</p><h1>Exit and recover.</h1><p>Close the experiment’s positions, convert the remaining USDC to SOL, reclaim eligible account rent and move everything recovered to the new wallet. Every step needs your approval in Solflare.</p></section>
+  <section className="recovery-card"><h2>Fixed destination</h2><code>{RECOVERY_DESTINATION}</code><p>Withdrawals must be signed by the <strong>old account ending qfH5TBx8j</strong>. Keep it selected until the final sweep is confirmed. No private key or recovery phrase is requested here.</p></section>
+  <ol className="recovery-steps">{Object.entries(steps).map(([key,label])=><li key={key} aria-current={status?.inventory.next===key?"step":undefined}>{label}</li>)}</ol>
+  {!connection?<section className="recovery-card"><h2>Connect the old wallet</h2>{wallets.length>0&&<select aria-label="Wallet" value={selection||wallets[0]?.name} onChange={e=>setSelection(e.target.value)}>{wallets.map(w=><option key={w.name}>{w.name}</option>)}</select>}<button onClick={()=>void connect()} disabled={busy||!wallets.length}>Connect old wallet</button>{!wallets.length&&<p>Open this page in Chrome or another browser with the Solflare extension enabled.</p>}<small>Connection asks for a login message signature. It does not authorize a transaction.</small></section>:<>
+   <section className="recovery-card"><h2>Live recovery inventory</h2><dl className="recovery-metrics"><div><dt>Old wallet SOL</dt><dd>{sol(status?.inventory.sourceLamports)}</dd></div><div><dt>USDC remaining</dt><dd>{usdc(status?.inventory.usdcAtoms)}</dd></div><div><dt>Wrapped SOL</dt><dd>{sol(status?.inventory.wsolAtoms)}</dd></div><div><dt>New wallet SOL</dt><dd>{sol(status?.inventory.destinationLamports)}</dd></div></dl><p>Orca: {status?.inventory.orcaOpen?"open":"closed"} · Kamino receipts: {usdc(status?.inventory.receiptAtoms)} · Known token accounts: {status?.inventory.openAccounts??"—"}</p><small>Before cleanup and the final sweep, the service scans both token programs. A failed scan or unsupported non-empty account blocks the sweep.</small></section>
+   {held&&<section className="recovery-card" role="status"><h2>{attempt?.state==="submitted"?"Waiting for finalized confirmation":"Waiting for the current attempt"}</h2><p>A signed or potentially signed attempt stays reserved until its outcome is known or its blockhash expires. Do not repeat it in another tab.</p>{attempt?.signature&&<a href={`https://solscan.io/tx/${attempt.signature}`} target="_blank" rel="noreferrer">View saved transaction ↗</a>}</section>}
+   {status?.inventory.next==="complete"?<section className="recovery-card"><h2>Source wallet empty</h2><p>The known positions are closed and no native SOL remains in the source wallet. Review the confirmed sweep in the history below.</p></section>:!held&&<section className="recovery-card"><h2>{steps[status?.inventory.next as RecoveryStep]??"Refresh inventory"}</h2><button onClick={()=>void prepare()} disabled={busy}>{busy?"Preparing and simulating…":attempt?.state==="ready"?"Refresh this step":"Prepare next step"}</button>{attempt?.state==="ready"&&plan&&<><p>{plan.summary}</p><dl className="recovery-metrics"><div><dt>Network fee</dt><dd>{sol(plan.feeLamports)} SOL</dd></div><div><dt>Simulated old SOL after</dt><dd>{sol(plan.after.sourceLamports)}</dd></div><div><dt>Simulated new SOL after</dt><dd>{sol(plan.after.destinationLamports)}</dd></div><div><dt>Review time left</dt><dd>{Math.max(0,Math.ceil((Date.parse(plan.expiresAt)-now)/1000))}s</dd></div></dl><p><small>Simulation is a preview, not a completed withdrawal. The browser independently checks the instructions and simulates again before signing.</small></p><button className="recovery-sign" onClick={()=>void execute()} disabled={busy||expired}>Sign this step in Solflare</button></>}</section>}
+   <section className="recovery-card"><h2>Transaction history</h2>{!status?.history.length?<p>No recovery transactions yet.</p>:<ul>{status.history.map(h=><li key={h.id}>{steps[h.step]??"Preparation"} · {h.state} {h.signature&&<a href={`https://solscan.io/tx/${h.signature}`} target="_blank" rel="noreferrer">Receipt ↗</a>}{h.receipt&&<small>Network fee {sol(h.receipt.feeLamports)} SOL · rent recovered {sol(h.receipt.rentRecoveredLamports)} SOL</small>}</li>)}</ul>}<button onClick={()=>void run(()=>refresh(connection.token))} disabled={busy}>Refresh chain status</button></section>
+  </>}{error&&<p className="recovery-error" role="alert">{error}</p>}<footer>Server signing and server broadcasting are disabled. Rent refunds and migration fees are shown separately from strategy returns. No new position will be opened.</footer>
+ </main>;
+}
+export default Recovery;

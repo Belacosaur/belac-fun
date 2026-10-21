@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import pg from "pg";
 import { syncStudio } from "./studio-sync.js";
 import { TradeStore } from "./trade-store.js";
+import {RecoveryStore} from "./recovery-store.js";
 import type { StudioSnapshot } from "../../../packages/contracts/src/studio.js";
 
 const address = process.env.EXPERIMENT_WALLET_ADDRESS;
@@ -11,6 +12,8 @@ const walletAddress: string = address;
 const kaminoProduct = process.env.KAMINO_PRODUCT || "lending";
 if (kaminoProduct !== "lending") throw new Error("This challenge requires KAMINO_PRODUCT=lending");
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 3, connectionTimeoutMillis: 5000, query_timeout: 15_000 });
+const recoveryStore=new RecoveryStore(pool,process.env.SOLANA_RPC_URL||"https://solana-rpc.publicnode.com");
+await recoveryStore.setup();
 const intervalMs = Math.max(60_000, Number(process.env.SYNC_INTERVAL_MS) || 60_000);
 let stopping = false;
 let lastCompleted = 0;
@@ -39,7 +42,9 @@ async function tick() {
     const old = await client.query<{ payload: StudioSnapshot }>("select payload from studio_snapshots where wallet_address=$1", [walletAddress]);
     const receipt = await tradeStore.receipt();
     const fees = await pool.query("select coalesce(sum(lamports),0)::text as total from wallet_trade_fee_events where wallet=$1", [walletAddress]);
-    const snapshot = await syncStudio(walletAddress, process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com", old.rows[0]?.payload, { jupiterApiKey: process.env.JUPITER_API_KEY, meteoraReceipt: receipt, failedTradeFees: BigInt(fees.rows[0].total) });
+    await recoveryStore.latest();
+    const recovery=await recoveryStore.started()?{inventory:await recoveryStore.inventory(),complete:await recoveryStore.completed()}:undefined;
+    const snapshot = await syncStudio(walletAddress, process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com", old.rows[0]?.payload, { jupiterApiKey: process.env.JUPITER_API_KEY, meteoraReceipt: receipt, failedTradeFees: BigInt(fees.rows[0].total), recovery });
     await client.query("begin");
     try {
       await client.query(`insert into studio_snapshots values ($1,$2,$3) on conflict(wallet_address)

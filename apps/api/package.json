@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "pnpm --filter @belac/jobs exec tsx ../api/src/server.ts",
     "dev": "node --experimental-strip-types src/server.ts",
     "build": "esbuild src/server.ts --bundle --platform=node --format=esm --outfile=dist/server.js --external:pg --external:fastify --external:@fastify/cors --external:@fastify/helmet --external:@fastify/rate-limit --external:@fastify/swagger --external:zod --external:decimal.js --external:jose --external:drizzle-orm",
     "test": "vitest run",

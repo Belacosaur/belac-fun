@@ -5,6 +5,7 @@ import { readActivePositions } from "./active-positions.js";
 import { readMeteoraDamm } from "./meteora-damm.js";
 import { readMeteoraPosition } from "./meteora-position.js";
 import type { MeteoraReceipt } from "../../../packages/contracts/src/trades.js";
+import {applyRecoveryTracking} from "./recovery-tracking.js";
 import { readKaminoDirect, readKaminoSupplyApy, KAMINO_CONFIRMED_ENTRY } from "./kamino-direct.js";
 import type { Observation, PlatformBalance, StudioSnapshot, WalletBalance } from "../../../packages/contracts/src/studio.js";
 
@@ -200,10 +201,15 @@ const connections: Record<typeof CHALLENGE[number]["key"], { source: string; det
   "pump-own-launch": { source: "https://github.com/pump-fun/pump-public-docs", detail: "Choose token name, symbol and launch budget · execution disabled" },
 };
 
-export async function syncStudio(address: string, rpcUrl: string, previous?: StudioSnapshot, options: { jupiterApiKey?: string; meteoraReceipt?: MeteoraReceipt; failedTradeFees?: bigint } = {}): Promise<StudioSnapshot> {
+export async function syncStudio(address: string, rpcUrl: string, previous?: StudioSnapshot, options: { jupiterApiKey?: string; meteoraReceipt?: MeteoraReceipt; failedTradeFees?: bigint; recovery?: StudioSnapshot["recovery"] } = {}): Promise<StudioSnapshot> {
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address)) throw new Error("Invalid public wallet address");
   if (previous?.address !== address || previous?.network !== "mainnet-beta") previous = undefined;
   const now = new Date().toISOString();
+  if(options.recovery){
+    const effectiveAddress=options.recovery.complete?options.recovery.inventory.destination:address;
+    const base:StudioSnapshot={version:1,address:effectiveAddress,network:"mainnet-beta",generatedAt:now,wallet:await observe(()=>walletBalance(effectiveAddress,rpcUrl),previous?.wallet,now),platforms:CHALLENGE.map(s=>({id:s.id,strategyKey:s.key,provider:s.provider,source:connections[s.key].source,observation:{status:"needs_setup",checkedAt:now,lastSuccessAt:null,data:null,message:"Recovery in progress"}}))};
+    return applyRecoveryTracking(base,options.recovery.inventory,options.recovery.complete);
+  }
   const walletPromise = observe(() => walletBalance(address, rpcUrl), previous?.wallet, now);
   const priorKamino = previous?.platforms.find(p => p.id === 6 && p.strategyKey === "kamino-usdc-lending")?.observation;
   const kaminoPromise = observe(async () => {

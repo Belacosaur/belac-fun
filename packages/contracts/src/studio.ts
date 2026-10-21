@@ -1,4 +1,5 @@
 /** Read-only observations. USD values are exact decimal strings. */
+import type {RecoveryInventory} from "./recovery.js";
 export type SyncStatus = "ready" | "empty" | "needs_setup" | "pending" | "deferred" | "manual" | "not_indexed" | "unavailable";
 export interface Observation<T> {
   status: SyncStatus;
@@ -16,6 +17,7 @@ export interface WalletBalance {
   recentTransactions: { signature: string; blockTime: number | null; failed: boolean }[];
 }
 export interface PlatformBalance {
+  closed?: boolean;
   valueUsd: string | null;
   positionCount: number | null;
   status: SyncStatus;
@@ -88,6 +90,7 @@ export interface ChallengeAccounting {
   disabledStations: number[];
 }
 export interface StudioSnapshot {
+  recovery?: {inventory:RecoveryInventory;complete:boolean};
   version: 1;
   address: string;
   network: "mainnet-beta";

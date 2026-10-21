@@ -18,3 +18,9 @@ it("only offers owner-authorized Meteora preparation and never server execution"
   expect(created).toBe(1); expect((await request("/v1/trades/execute", {})).statusCode).toBe(404);
   await app.close();
 });
+it("recovery mode blocks old ready entry plans from reaching signing claims",async()=>{
+ const app=Fastify();let begun=0;const store={authorized:async()=>true,begin:async()=>{begun++;}} as unknown as TradeStore;
+ registerTradeRoutes(app,null,"https://belac.fun",store,true);
+ const r=await app.inject({method:"POST",url:"/v1/trades/meteora/00000000-0000-4000-8000-000000000001/begin",headers:{origin:"https://belac.fun",authorization:"Bearer owner"},payload:{}});
+ expect(r.statusCode).toBe(403);expect(begun).toBe(0);await app.close();
+});

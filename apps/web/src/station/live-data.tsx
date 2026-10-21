@@ -29,6 +29,7 @@ export function statusLabel(observation?: Observation<PlatformBalance>, stale = 
   if (!observation) return "Connecting";
   if (observation.status === "pending") return "Pending";
   if (stale || observation.status === "unavailable") return "Stale / retrying";
+  if (observation.data?.closed) return "Closed · recovered";
   if (observation.data?.damm?.state === "prepared") return "Prepared · execution off";
   if (observation.data?.lending?.state === "prepared") return "Prepared · execution off";
   if (observation.data?.lending?.state === "unattributed") return "Needs entry attribution";
