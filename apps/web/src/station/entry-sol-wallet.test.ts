@@ -1,0 +1,22 @@
+import {afterEach,expect,it,vi} from "vitest";
+import * as k from "@solana/kit";
+import {validateSolEntryPlan} from "./entry-sol-wallet";
+import type {StationEntryPlan} from "../../../../packages/contracts/src/station-entries";
+import {CHALLENGE_WALLET,TRADE_TOKEN_ACCOUNTS} from "../../../../packages/contracts/src/trades";
+afterEach(()=>vi.unstubAllGlobals());
+const base=()=>({stationId:1,wallet:CHALLENGE_WALLET,accounts:{...TRADE_TOKEN_ACCOUNTS},budgetUsdcAtoms:"10000000",maxSpendUsdcAtoms:"10000000",simulatedSpendUsdcAtoms:"10000000",rentLamports:"0",feeLamports:"6000",before:{nativeLamports:"20000000",usdcAtoms:"20000000",wsolAtoms:"361964"},after:{nativeLamports:"19994000",usdcAtoms:"10000000",wsolAtoms:"70361964"},details:{quotedWsolAtoms:"70000000",minimumWsolAtoms:"69650000",acquiredWsolAtoms:"70000000"}} as unknown as StationEntryPlan);
+it("rejects a buy falsely represented as native SOL and preserves pre-existing WSOL",async()=>{const p=base();p.after.wsolAtoms="70000000";await expect(validateSolEntryPlan(p)).rejects.toThrow();});
+it("rejects a higher USDC cap",async()=>{const p=base();p.maxSpendUsdcAtoms="10000001";await expect(validateSolEntryPlan(p)).rejects.toThrow();});
+it("rejects an extra instruction before any RPC read",async()=>{
+ const p=base();const message=k.pipe(k.createTransactionMessage({version:0}),t=>k.setTransactionMessageFeePayer(k.address(CHALLENGE_WALLET),t),t=>k.setTransactionMessageLifetimeUsingBlockhash({blockhash:k.blockhash("11111111111111111111111111111111"),lastValidBlockHeight:1n},t),t=>k.appendTransactionMessageInstructions([{programAddress:k.address("11111111111111111111111111111111"),data:new Uint8Array([2])}],t));p.messageBase64=Buffer.from(k.getCompiledTransactionMessageEncoder().encode(k.compileTransactionMessage(message))).toString("base64");const f=vi.fn();vi.stubGlobal("fetch",f);await expect(validateSolEntryPlan(p)).rejects.toThrow();expect(f).not.toHaveBeenCalled();
+});
+it("validates actual Whirlpool/tick/vault ownership and rejects a redirected destination",async()=>{
+ const {readFile}=await import("node:fs/promises"),{webcrypto,createHash}=await import("node:crypto");vi.stubGlobal("crypto",webcrypto);
+ const f=JSON.parse(await readFile("../jobs/src/fixtures/meteora-new-wallet-synthetic.json","utf8")),swap=structuredClone(f.calls[3].response.swapInstruction);swap.accounts.splice(5,1);swap.accounts.splice(7,1);const b=Buffer.from(swap.data,"base64");createHash("sha256").update("global:route").digest().copy(b,0,0,8);b.writeBigUInt64LE(10000000n,17);b.writeBigUInt64LE(70000000n,25);
+ const p=base();p.slot=f.plan.slot;p.accounts.route=swap.accounts[12].pubkey;const cu=Buffer.from([2,64,66,15,0]),priority=Buffer.from([3,232,3,0,0,0,0,0,0]);
+ const compile=()=>{const instructions:k.Instruction[]=[{programAddress:k.address("ComputeBudget111111111111111111111111111111"),data:cu},{programAddress:k.address("ComputeBudget111111111111111111111111111111"),data:priority},{programAddress:k.address(swap.programId),data:b,accounts:swap.accounts.map((a:{pubkey:string;isSigner:boolean;isWritable:boolean})=>({address:k.address(a.pubkey),role:a.isSigner?a.isWritable?3:2:a.isWritable?1:0}))}];const message=k.pipe(k.createTransactionMessage({version:0}),t=>k.setTransactionMessageFeePayer(k.address(CHALLENGE_WALLET),t),t=>k.setTransactionMessageLifetimeUsingBlockhash({blockhash:k.blockhash(f.plan.blockhash),lastValidBlockHeight:1n},t),t=>k.appendTransactionMessageInstructions(instructions,t));p.messageBase64=Buffer.from(k.getCompiledTransactionMessageEncoder().encode(k.compileTransactionMessage(message))).toString("base64");};compile();
+ const map=new Map<string,unknown>();for(const call of f.calls)if(call.request?.method==="getMultipleAccounts")call.request.params[0].forEach((key:string,i:number)=>map.set(key,call.response.result.value[i]));vi.stubGlobal("fetch",vi.fn(async(_url:unknown,init:RequestInit)=>{const req=JSON.parse(String(init.body));return new Response(JSON.stringify({result:{value:req.params[0].map((key:string)=>map.get(key))}}));}));
+ await expect(validateSolEntryPlan(p)).resolves.toBeUndefined();
+ swap.accounts[3].pubkey=CHALLENGE_WALLET;compile();await expect(validateSolEntryPlan(p)).rejects.toThrow();swap.accounts[3].pubkey=TRADE_TOKEN_ACCOUNTS.wsol;compile();
+ const pool=map.get(p.accounts.route!) as {owner:string};map.set(p.accounts.route!,{...pool,owner:"wrong"});await expect(validateSolEntryPlan(p)).rejects.toThrow();
+});

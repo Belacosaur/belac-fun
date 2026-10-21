@@ -78,6 +78,13 @@
       "when": 1792558800000,
       "tag": "0010_wallet_recovery",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792569600000,
+      "tag": "0011_station_entries",
+      "breakpoints": true
     }
   ]
 }

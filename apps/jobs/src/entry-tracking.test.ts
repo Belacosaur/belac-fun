@@ -1,0 +1,15 @@
+import {expect,it,vi,beforeEach} from "vitest";
+import {applyStationEntryTracking} from "./entry-tracking.js";
+import {readSolEntry} from "./entry-sol.js";
+import {readKaminoEntry} from "./entry-kamino.js";
+import {readOrcaEntry} from "./entry-orca.js";
+import type {StationEntryReceipt} from "../../../packages/contracts/src/station-entries.js";
+import type {StudioSnapshot} from "../../../packages/contracts/src/studio.js";
+vi.mock("./entry-sol.js",()=>({readSolEntry:vi.fn()}));vi.mock("./entry-kamino.js",()=>({readKaminoEntry:vi.fn()}));vi.mock("./entry-orca.js",()=>({readOrcaEntry:vi.fn()}));
+const owner="owner",now="2026-10-21T01:00:00Z";
+const snapshot=()=>({address:owner,network:"mainnet-beta",platforms:[1,5,6,8].map(id=>({id,observation:{status:"empty",data:{closed:true,valueUsd:"0"}}}))} as StudioSnapshot);
+const receipt=(stationId:1|6|8)=>({wallet:owner,stationId,signature:`sig${stationId}`,plan:{wallet:owner,stationId}} as StationEntryReceipt);
+beforeEach(()=>{vi.resetAllMocks();for(const reader of [readSolEntry,readKaminoEntry,readOrcaEntry])vi.mocked(reader).mockResolvedValue({status:"ready",valueUsd:"10.02",positionCount:1,executionEnabled:false,detail:"active"});});
+it("maps only confirmed supplied receipts to their own station and preserves Meteora",async()=>{const s=snapshot();const next=await applyStationEntryTracking(s,[receipt(1),receipt(6),receipt(8)],"https://rpc",undefined,now);for(const id of [1,6,8])expect(next.platforms.find(p=>p.id===id)?.observation.data?.positionCount).toBe(1);expect(next.platforms[1]).toBe(s.platforms[1]);expect(readSolEntry).toHaveBeenCalledWith(expect.objectContaining({stationId:1}),"https://rpc",undefined,now);});
+it("rejects another owner without reading or reusing its history",async()=>{await expect(applyStationEntryTracking(snapshot(),[{...receipt(1),wallet:"foreign"}],"https://rpc",undefined,now)).rejects.toThrow();expect(readSolEntry).not.toHaveBeenCalled();});
+it("retains history only for the same wallet and confirmed entry signature",async()=>{const previous=snapshot(),performance={entrySignature:"sig1",history:[{at:"before",valueUsd:"10"}]};previous.platforms[0]!.observation={status:"ready",checkedAt:"before",lastSuccessAt:"before",message:"old",data:{status:"ready",valueUsd:"10",positionCount:1,detail:"prior",performance:performance as never}};vi.mocked(readSolEntry).mockRejectedValue(Error("private rpc url"));const next=await applyStationEntryTracking(snapshot(),[receipt(1)],"https://rpc",previous,now);expect(next.platforms[0]!.observation.data?.performance).toBe(performance);expect(next.platforms[0]!.observation.message).not.toContain("private");const other=await applyStationEntryTracking(snapshot(),[receipt(1)],"https://rpc",{...previous,address:"foreign"},now);expect(other.platforms[0]!.observation.data?.performance).toBeUndefined();});

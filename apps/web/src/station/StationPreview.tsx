@@ -6,7 +6,7 @@ import { STATIONS } from "./room-model";
 import { type CameraView } from "./simulation";
 import { StudioContext, useLiveStudio, moneyUsd, pnlMoney, strategySummary, statusLabel, feedLabel, connectionLabel } from "./live-data";
 import "./station.css";
-import {MeteoraTrade} from "./MeteoraTrade";
+import {StationEntries} from "./StationEntries";
 
 class SceneBoundary extends Component<{ children: ReactNode; onError: () => void }, { failed: boolean }> {
   state = { failed: false };
@@ -147,7 +147,7 @@ export default function StationPreview() {
       {Boolean(live.snapshot?.wallet.data?.unpricedAssets) && <p>Raw wallet assets include unpriced tokens or position NFTs. Strategy equity is calculated separately from verified position ownership and inventory.</p>}
       {live.snapshot?.wallet.data && live.snapshot.wallet.data.tokens.length > 0 && <div className="wallet-tokens"><h3>Wallet tokens</h3>{live.snapshot.wallet.data.tokens.map((token) => <p key={token.mint}>{token.amount} · <a href={`https://solscan.io/token/${token.mint}`} target="_blank" rel="noreferrer">{token.mint}</a></p>)}</div>}
     </section>}
-    {tradeOpen&&<MeteoraTrade onClose={()=>setTradeOpen(false)} onRefresh={live.refresh}/>}
+    {tradeOpen&&<StationEntries onClose={()=>setTradeOpen(false)} onRefresh={live.refresh}/>}
     {credits && <div className="scene-credits"><strong>The orbital studio.</strong><p>Read-only wallet and platform observations, synced in the background. Platform coverage is partial; unknown values stay blank. Character: RobotExpressive by Quaternius / Tomás Laulhé (CC0), adapted by Don McCurdy. The characters are visual hosts, not trading agents.</p><a href="/station/robot-source.md" target="_blank" rel="noreferrer">Robot attribution ↗</a><p>Procedural nebula adapted from Space 3D by wwwtyro (Unlicense). Camera orbit, pan and zoom reveal the surrounding space. Drift pauses with reduced motion enabled.</p><a href="/station/space-source.md" target="_blank" rel="noreferrer">Space attribution ↗</a><button onClick={() => setCredits(false)} aria-label="Close scene information">×</button></div>}
   </div></StudioContext.Provider>;
 }

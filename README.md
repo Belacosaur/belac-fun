@@ -7,7 +7,7 @@ An orbital control room for the $100 challenge: ten platform stations, a portfol
 - Frontend: Vite/React/Three.js, published to [belac.fun](https://belac.fun/station) on Cloudflare Pages (`belac-fun`).
 - Backend: Railway API, sync worker, research worker, preparation service and PostgreSQL. See [infra/README.md](infra/README.md).
 - SOL, Orca and Kamino positions are tracked from chain data. Other stations remain disabled; Ript is pending.
-- Meteora supports owner wallet connection, review and browser signing for an entry capped at 10 USDC. Preparation never signs or broadcasts on the server. Automated execution remains disabled.
+- The [owner approval queue](docs/integrations/station-approval-queue.md) supports fresh SOL, direct Kamino lending and Orca reviews capped at 10 USDC each. Meteora remains active. Preparation never signs or broadcasts on the server; automated execution remains disabled.
 
 ## Development and release
 

@@ -32,9 +32,15 @@ export class TradeStore {
   async latest() { const r = await this.pool.query<Row>("select * from wallet_trade_attempts where wallet=$1 and station=5 order by created_at desc limit 1", [this.wallet]); return r.rows[0] ? attempt(r.rows[0]) : null; }
   async get(id: string) { const r = await this.pool.query<Row>("select * from wallet_trade_attempts where id=$1 and wallet=$2", [id, this.wallet]); return r.rows[0] ? attempt(r.rows[0]) : null; }
   async create(mint: string) {
-    const id = randomUUID();
+    const id = randomUUID(), c=await this.pool.connect();
     // Unique index retains a reservation through uncertain submissions and through the one active position.
-    await this.pool.query("insert into wallet_trade_attempts(id,wallet,station,mint,state) values($1,$2,5,$3,'queued')", [id, this.wallet, mint]);
+    try{await c.query("begin");await c.query("select pg_advisory_xact_lock(hashtext($1))",["station-entries:"+this.wallet]);
+      if((await c.query("select to_regclass('station_entry_attempts') as table_name")).rows[0]?.table_name){
+        const pending=await c.query("select 1 from station_entry_attempts where wallet=$1 and state in ('preparing','ready','signing','submitted','unknown') limit 1",[this.wallet]);
+        if(pending.rowCount)throw new Error("Another station review requires reconciliation first");
+      }
+      await c.query("insert into wallet_trade_attempts(id,wallet,station,mint,state) values($1,$2,5,$3,'queued')", [id, this.wallet, mint]);await c.query("commit");
+    }catch(e){await c.query("rollback");throw e;}finally{c.release();}
     return (await this.get(id))!;
   }
   async claim() {

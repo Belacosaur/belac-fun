@@ -6,6 +6,8 @@ import { readMeteoraDamm } from "./meteora-damm.js";
 import { readMeteoraPosition } from "./meteora-position.js";
 import type { MeteoraReceipt } from "../../../packages/contracts/src/trades.js";
 import {applyRecoveryTracking} from "./recovery-tracking.js";
+import {applyStationEntryTracking} from "./entry-tracking.js";
+import type {StationEntryReceipt} from "../../../packages/contracts/src/station-entries.js";
 import { readKaminoDirect, readKaminoSupplyApy, KAMINO_CONFIRMED_ENTRY } from "./kamino-direct.js";
 import type { Observation, PlatformBalance, StudioSnapshot, WalletBalance } from "../../../packages/contracts/src/studio.js";
 
@@ -201,12 +203,12 @@ const connections: Record<typeof CHALLENGE[number]["key"], { source: string; det
   "pump-own-launch": { source: "https://github.com/pump-fun/pump-public-docs", detail: "Choose token name, symbol and launch budget · execution disabled" },
 };
 
-export async function syncStudio(address: string, rpcUrl: string, previous?: StudioSnapshot, options: { jupiterApiKey?: string; meteoraReceipt?: MeteoraReceipt; failedTradeFees?: bigint; recovery?: StudioSnapshot["recovery"] } = {}): Promise<StudioSnapshot> {
+export async function syncStudio(address: string, rpcUrl: string, previous?: StudioSnapshot, options: { jupiterApiKey?: string; meteoraReceipt?: MeteoraReceipt; entryReceipts?: StationEntryReceipt[]; failedTradeFees?: bigint; recovery?: StudioSnapshot["recovery"] } = {}): Promise<StudioSnapshot> {
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address)) throw new Error("Invalid public wallet address");
-  if (previous?.address !== address || previous?.network !== "mainnet-beta") previous = undefined;
+  const effectiveAddress=options.recovery?.complete?options.recovery.inventory.destination:address;
+  if (previous?.address !== effectiveAddress || previous?.network !== "mainnet-beta") previous = undefined;
   const now = new Date().toISOString();
   if(options.recovery){
-    const effectiveAddress=options.recovery.complete?options.recovery.inventory.destination:address;
     const base:StudioSnapshot={version:1,address:effectiveAddress,network:"mainnet-beta",generatedAt:now,wallet:await observe(()=>walletBalance(effectiveAddress,rpcUrl),previous?.wallet,now),platforms:CHALLENGE.map(s=>({id:s.id,strategyKey:s.key,provider:s.provider,source:connections[s.key].source,observation:{status:"needs_setup",checkedAt:now,lastSuccessAt:null,data:null,message:"Recovery in progress"}}))};
     let active:Parameters<typeof applyRecoveryTracking>[3];
     if(options.recovery.complete&&options.meteoraReceipt){
@@ -214,7 +216,8 @@ export async function syncStudio(address: string, rpcUrl: string, previous?: Stu
       const prior=previous?.address===effectiveAddress?previous.platforms.find(p=>p.id===5)?.observation:undefined;
       active={wallet:effectiveAddress,observation:await observe(()=>readMeteoraPosition(effectiveAddress,rpcUrl,options.meteoraReceipt!,prior?.data?.performance,now),prior?.data?.performance?prior:undefined,now)};
     }
-    return applyRecoveryTracking(base,options.recovery.inventory,options.recovery.complete,active);
+    const tracked=applyRecoveryTracking(base,options.recovery.inventory,options.recovery.complete,active);
+    return options.recovery.complete?applyStationEntryTracking(tracked,options.entryReceipts??[],rpcUrl,previous,now):tracked;
   }
   const walletPromise = observe(() => walletBalance(address, rpcUrl), previous?.wallet, now);
   const priorKamino = previous?.platforms.find(p => p.id === 6 && p.strategyKey === "kamino-usdc-lending")?.observation;

@@ -10,6 +10,7 @@ import { registerStudioRoutes } from "./studio-routes.js";
 import { registerResearchRoutes } from "./research-routes.js";
 import { registerTradeRoutes } from "./trade-routes.js";
 import {registerRecoveryRoutes} from "./recovery-routes.js";
+import {registerStationEntryRoutes} from "./station-entry-routes.js";
 import {RecoveryStore} from "../../jobs/src/recovery-store.js";
 import {TradeStore} from "../../jobs/src/trade-store.js";
 import {RECOVERY_SOURCE} from "../../../packages/contracts/src/recovery.js";
@@ -29,6 +30,8 @@ export type ApiEnv = {
   SOLANA_RPC_URL?: string;
   RECOVERY_MODE?: string;
   METEORA_PREPARATION_ENABLED?: string;
+  STATION_PREPARATION_ENABLED?: string;
+  JUPITER_API_KEY?: string;
 };
 
 declare module "fastify" {
@@ -96,6 +99,7 @@ export function buildApp(env: ApiEnv = process.env): FastifyInstance {
     registerStudioRoutes(instance, pool, env.EXPERIMENT_WALLET_ADDRESS);
     registerResearchRoutes(instance, pool, env.EXPERIMENT_WALLET_ADDRESS, env);
     registerTradeRoutes(instance, pool, env.ALLOWED_ORIGINS ?? "",undefined,env.RECOVERY_MODE==="true",env.METEORA_PREPARATION_ENABLED==="true");
+    registerStationEntryRoutes(instance,pool,env.ALLOWED_ORIGINS??"",env.SOLANA_RPC_URL||"https://solana-rpc.publicnode.com",env.JUPITER_API_KEY,env.STATION_PREPARATION_ENABLED==="true",env.RECOVERY_MODE==="true");
     registerRecoveryRoutes(instance,pool?new TradeStore(pool,undefined,RECOVERY_SOURCE):null,pool?new RecoveryStore(pool,env.SOLANA_RPC_URL||"https://solana-rpc.publicnode.com"):null,env.ALLOWED_ORIGINS??"");
     registerAdminRoutes(instance, pool, env);
   });

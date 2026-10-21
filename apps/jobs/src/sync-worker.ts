@@ -4,6 +4,8 @@ import pg from "pg";
 import { syncStudio } from "./studio-sync.js";
 import { TradeStore } from "./trade-store.js";
 import {RecoveryStore} from "./recovery-store.js";
+import {StationEntryStore} from "./station-entry-store.js";
+import {reconcileStationEntries} from "./station-entry-reconcile.js";
 import type { StudioSnapshot } from "../../../packages/contracts/src/studio.js";
 
 const address = process.env.EXPERIMENT_WALLET_ADDRESS;
@@ -25,6 +27,8 @@ const schema = await readFile(new URL("../../../packages/db/drizzle/0007_live_sy
 await pool.query(schema);
 await pool.query(await readFile(new URL("../../../packages/db/drizzle/0009_wallet_trades.sql", import.meta.url), "utf8"));
 const tradeStore = new TradeStore(pool);
+const stationEntryStore=new StationEntryStore(pool);
+await stationEntryStore.setup();
 const server = createServer((request, response) => {
   if (request.url !== "/health/live") { response.writeHead(404).end(); return; }
   const healthy = !stopping && Date.now() - (lastCompleted || started) < intervalMs * 5;
@@ -44,7 +48,9 @@ async function tick() {
     const fees = await pool.query("select coalesce(sum(lamports),0)::text as total from wallet_trade_fee_events where wallet=$1", [walletAddress]);
     await recoveryStore.latest();
     const recovery=await recoveryStore.started()?{inventory:await recoveryStore.inventory(),complete:await recoveryStore.completed()}:undefined;
-    const snapshot = await syncStudio(walletAddress, process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com", old.rows[0]?.payload, { jupiterApiKey: process.env.JUPITER_API_KEY, meteoraReceipt: receipt, failedTradeFees: BigInt(fees.rows[0].total), recovery });
+    await reconcileStationEntries(stationEntryStore,process.env.SOLANA_RPC_URL||"https://api.mainnet-beta.solana.com");
+    const entryReceipts=await stationEntryStore.receipts();
+    const snapshot = await syncStudio(walletAddress, process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com", old.rows[0]?.payload, { jupiterApiKey: process.env.JUPITER_API_KEY, meteoraReceipt: receipt, entryReceipts, failedTradeFees: BigInt(fees.rows[0].total), recovery });
     await client.query("begin");
     try {
       await client.query(`insert into studio_snapshots values ($1,$2,$3) on conflict(wallet_address)

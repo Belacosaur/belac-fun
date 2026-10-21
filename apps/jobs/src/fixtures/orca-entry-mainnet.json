@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "stationId": 8,
+  "wallet": "3nJzqZMc4WsGhCmD7vG2SmUzHDyD3Q58vxLbWUvUjSLX",
+  "mint": "DMWoXfcd5n7V5odVCGTbGR6pCebCgoPmArYwc2b9YUhy",
+  "preparedAt": "2026-10-21T07:30:18.084Z",
+  "expiresAt": "2026-10-21T07:31:06.267Z",
+  "lastValidBlockHeight": "437581281",
+  "blockhash": "Gk8iXapB4SvM5T9Am5iAwKNfYxLxD1LLc7yTmqQ1H55M",
+  "slot": 459546321,
+  "wireBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAIAChkpUtwYucCc0gL9oZ4OceFjRCWL0REFvJNE6/PU6PavkLeNjojGnDDSF4Grd5O1vj/pTcdiHCKKV2S0Crzin7xsFl+VcsWpaqUC3VEQVKJqbSWO98HW1sGu4SkZFNxRAjIeNmqNqE2epHmPASMxaKAxn98xHLPmVRcpjIEeq509jFdmeY9gYxtaagBaEAiYW6kblIp8n9w8IPOmAHl2OnWScd2LuNUfFiber1nnIratwlwilWyzfGxudYOF31aC3PxtfCqXxZzPMqiOoy02XmjNjbeAtKdwT/09K4MM3nvoLm5gVpu5F8ZojWkXLg/+3N6q3ojiaqYyBIbz7VP7jS5Ynzml9UPxcV3opz2MDRIUykQAuAuljCHZ473UHfr1rP6kzNHByl/7xC2YXIw6ySc6j+YD6tbQkQld2lQzijfqf7I2kNfQdY0dXYuJUM7HqbTXx5ro/7XGug29YqGYN5NbstLlB/JiFY6b81J9v5eecuq7HDaAcWIOGT2eW6et8Hy0VecoImHGDOXQqdTCpElzgrDBw9icnf2ktZj4sNDlU8hN8kM4mDvkqFswl7r0C8lXEQjSiawAs2jfF11Edc962+FMK6YBPXtlXF4QPTY6rEe+hxkBpCoGK7UJu5BHUK4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACZqZq7dl+XwRHHWCOTGmTnXep2Zs83QkxGJ/muRCtJpjJclj04kifG7PRApFI4NgwtaE5na/xCEBI572Nvp+FkDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAMb6evO+2606PWXzaqvJdDGxu+TC0vbg5HymAgNFL11hBUpTWpkpIQZNJOhxYNo4fHw1td28kruB5B+oQEEFRI0Gm4hX/quBhPtof2NGGMA12sQ53BrrO1WYoPAAAAAAAQbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpBt324e51j94YQl285GzN2rYa/E2DuQ0n/r35KNihi/wOA2hfjpCQU+RYEhxm9adq7cdwaqEcgviqlSqPK3h5qensANBz/kvr5Mxtis+cvutHzCAAWhMDskn2kNwd0Y1sBBIABQLAXBUAGA8WFhQAChUTCQ0EAgMGCw4rKwTtCxrJHmIHU30CAAAAAFBSRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgKAAAIAQwKFw8REBHUL19ccmaD+tSf//+wr///ABgPChYWFAAIDBUTCQQNAgcFKYUdWd9F7rAK4NhFCQAAAAAAAAAAAAAAAAdTfQIAAAAAPFhSAAAAAAAAAA==",
+  "messageBase64": "gAIAChkpUtwYucCc0gL9oZ4OceFjRCWL0REFvJNE6/PU6PavkLeNjojGnDDSF4Grd5O1vj/pTcdiHCKKV2S0Crzin7xsFl+VcsWpaqUC3VEQVKJqbSWO98HW1sGu4SkZFNxRAjIeNmqNqE2epHmPASMxaKAxn98xHLPmVRcpjIEeq509jFdmeY9gYxtaagBaEAiYW6kblIp8n9w8IPOmAHl2OnWScd2LuNUfFiber1nnIratwlwilWyzfGxudYOF31aC3PxtfCqXxZzPMqiOoy02XmjNjbeAtKdwT/09K4MM3nvoLm5gVpu5F8ZojWkXLg/+3N6q3ojiaqYyBIbz7VP7jS5Ynzml9UPxcV3opz2MDRIUykQAuAuljCHZ473UHfr1rP6kzNHByl/7xC2YXIw6ySc6j+YD6tbQkQld2lQzijfqf7I2kNfQdY0dXYuJUM7HqbTXx5ro/7XGug29YqGYN5NbstLlB/JiFY6b81J9v5eecuq7HDaAcWIOGT2eW6et8Hy0VecoImHGDOXQqdTCpElzgrDBw9icnf2ktZj4sNDlU8hN8kM4mDvkqFswl7r0C8lXEQjSiawAs2jfF11Edc962+FMK6YBPXtlXF4QPTY6rEe+hxkBpCoGK7UJu5BHUK4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACZqZq7dl+XwRHHWCOTGmTnXep2Zs83QkxGJ/muRCtJpjJclj04kifG7PRApFI4NgwtaE5na/xCEBI572Nvp+FkDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAMb6evO+2606PWXzaqvJdDGxu+TC0vbg5HymAgNFL11hBUpTWpkpIQZNJOhxYNo4fHw1td28kruB5B+oQEEFRI0Gm4hX/quBhPtof2NGGMA12sQ53BrrO1WYoPAAAAAAAQbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpBt324e51j94YQl285GzN2rYa/E2DuQ0n/r35KNihi/wOA2hfjpCQU+RYEhxm9adq7cdwaqEcgviqlSqPK3h5qensANBz/kvr5Mxtis+cvutHzCAAWhMDskn2kNwd0Y1sBBIABQLAXBUAGA8WFhQAChUTCQ0EAgMGCw4rKwTtCxrJHmIHU30CAAAAAFBSRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgKAAAIAQwKFw8REBHUL19ccmaD+tSf//+wr///ABgPChYWFAAIDBUTCQQNAgcFKYUdWd9F7rAK4NhFCQAAAAAAAAAAAAAAAAdTfQIAAAAAPFhSAAAAAAAAAA==",
+  "messageHash": "627d0710b7fccc7c537707aea89ae688517d2f2caabf021a2a59c54bc4f5af18",
+  "lookupTables": {},
+  "budgetUsdcAtoms": "10000000",
+  "maxSpendUsdcAtoms": "9874060",
+  "simulatedSpendUsdcAtoms": "9824935",
+  "feeLamports": "10000",
+  "rentLamports": "7143520",
+  "before": {
+    "nativeLamports": "20946181",
+    "usdcAtoms": "90181979",
+    "wsolAtoms": "361964"
+  },
+  "after": {
+    "nativeLamports": "13792661",
+    "usdcAtoms": "80357044",
+    "wsolAtoms": "569771"
+  },
+  "accounts": {
+    "pool": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+    "usdc": "6tB6jxYyKVLRvb5GmJtsoDUayUU6Us67y7w1HMoUaxYy",
+    "wsol": "C6K1LEGJ48YdTXzYYvHEZoRV1cMS5ZGzrYaPHDcWc77c",
+    "position": "BiYotMbhEAuaKLQZ2CA662iUjrxrG8ZR4SUxViC4my9X",
+    "mint": "DMWoXfcd5n7V5odVCGTbGR6pCebCgoPmArYwc2b9YUhy",
+    "nft": "D8xMoMWmVn24mrv7TSTCYXkcXhemDyXkCVcLPwUZFqP8",
+    "vaultA": "EUuUbDcafPrmVTD5M6qoJAoyyNbihBhugADAxRMn5he9",
+    "vaultB": "2WLWEuKDgkDUccTpbwYp1GToYktiSB1cXvreHUwiSUVP",
+    "tickArrayLower": "8Rs3qKaVGBndwNdeDqHcayatonVzdBrdYoq27CKyjuE7",
+    "tickArrayUpper": "8fV1MQYaRiW9qDWinzYfNa3FLs8PXSdPxoytiwrcyJPD",
+    "swapTickArray0": "32wMhfqGgeaftnPacPR6pqBPL3agbd7to1oUsqo6y14F",
+    "swapTickArray1": "8NPFeBD52yqJWnsmBNma9qXXGEjXa6WatYcLMXjzSeyK",
+    "swapTickArray2": "D3461zSTVPNdBFPRk2b6zpqQ93g2LW5Kw2potgMdxNJP",
+    "oracle": "FoKYKtRpD25TKzBMndysKpgPqbj8AdLXjfpYHXn9PGTX"
+  },
+  "details": {
+    "tickLower": -24620,
+    "tickUpper": -20560,
+    "lowerPrice": "85.27474779711956",
+    "upperPrice": "127.97796134833355",
+    "price": "106.62451654491004",
+    "swapTickStart": -22528,
+    "liquidity": "155572448",
+    "minAcquiredWSOL": "41767687",
+    "maxSOLdeposit": "41767687",
+    "maxUSDCdeposit": "5396540",
+    "maxSwapUsdcAtoms": "4477520",
+    "estimatedSwapUsdcAtoms": "4455243",
+    "cashUsdcAtoms": "175065",
+    "residualWsolAtoms": "207807"
+  },
+  "summary": "Acquire investment SOL from this station's USDC and atomically open Orca SOL/USDC liquidity at approximately ±20%. Existing WSOL and native principal remain protected."
+}
