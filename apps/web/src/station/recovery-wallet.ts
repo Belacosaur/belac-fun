@@ -53,7 +53,9 @@ export async function validateRecoveryPlan(p:RecoveryPlan){
  }else check(p.step==="cleanup");
  for(const i of actions.filter(i=>i.program===TOKEN||i.program===TOKEN22)){
   check(i.data.length===1&&i.data[0]===9);check(i.keys.length===3&&i.keys[1]===SOURCE&&i.keys[2]===SOURCE);
-  const a=p.before.accounts.find(a=>a.address===i.keys[0]);check(a&&a.program===i.program&&(a.amount==="0"||a.mint===SOL));
+  // The exact full redemption checked above empties this receipt account before its close.
+  const redeemedReceipt=p.step==="kamino"&&i===actions[2]&&i.keys[0]===CTA;
+  const a=p.before.accounts.find(a=>a.address===i.keys[0]);check(a&&a.program===i.program&&(a.amount==="0"||a.mint===SOL||(redeemedReceipt&&a.mint===collateral&&a.amount===p.before.receiptAtoms)));
  }
  if(p.step==="kamino")check(actions[2]!.program===TOKEN&&actions[2]!.keys[0]===CTA);
  if(p.step==="cleanup")check(actions.length===p.before.accounts.length&&new Set(actions.map(i=>i.keys[0])).size===actions.length&&actions.every(i=>i.program===TOKEN||i.program===TOKEN22));
