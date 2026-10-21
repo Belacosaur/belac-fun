@@ -5,7 +5,7 @@ import { verifyMeteoraReceipt, verifyFailedMeteoraFee, type ChainTransaction } f
 import { METEORA_ACCOUNTS } from "./meteora-builder.js";
 import { DAMM } from "./meteora-damm.js";
 import type { TradeRpc } from "./trade-rpc.js";
-const f = JSON.parse(await readFile(new URL("./fixtures/meteora-builder-mainnet.json", import.meta.url), "utf8"));
+const f = JSON.parse(await readFile(new URL("./fixtures/meteora-new-wallet-synthetic.json", import.meta.url), "utf8"));
 function chainFixture() {
   const p = f.plan, c = k.getCompiledTransactionMessageDecoder().decode(Buffer.from(p.messageBase64, "base64"));
   if (c.version !== 0) throw Error("fixture version");

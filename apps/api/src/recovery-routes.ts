@@ -4,15 +4,25 @@ import type {TradeStore} from "../../jobs/src/trade-store.js";
 import type {RecoveryStore} from "../../jobs/src/recovery-store.js";
 import {RECOVERY_SOURCE} from "../../../packages/contracts/src/recovery.js";
 type Store=Pick<RecoveryStore,"inventory"|"latest"|"history"|"prepare"|"begin"|"register"|"read"> & {setup?:()=>Promise<void>};
-export function registerRecoveryRoutes(app:FastifyInstance,auth:Pick<TradeStore,"authorized">|null,store:Store|null,allowedOrigins:string){
+export function registerRecoveryRoutes(app:FastifyInstance,auth:(Pick<TradeStore,"authorized"> & Partial<Pick<TradeStore,"challenge"|"login">>)|null,store:Store|null,allowedOrigins:string){
  const origins=allowedOrigins.split(",").map(s=>s.trim());
  app.register(async instance=>{
   instance.addHook("onRequest",async(req,reply)=>{
    reply.header("Cache-Control","private, no-store");const origin=req.headers.origin;
    if(!origin||!origins.includes(origin))return reply.code(403).send({error:"Origin not allowed"});
    if(!store||!auth)return reply.code(503).send({error:"Recovery unavailable"});
+   if(req.routeOptions.url==="/v1/recovery/wallet/challenge"||req.routeOptions.url==="/v1/recovery/wallet/session")return;
    if(!await auth.authorized(origin,req.headers.authorization?.replace(/^Bearer /,"")??""))return reply.code(401).send({error:"Connect and authenticate the old challenge wallet"});
    await store.setup?.();
+  });
+  instance.post("/v1/recovery/wallet/challenge",async(req,reply)=>{
+   z.object({wallet:z.literal(RECOVERY_SOURCE)}).strict().parse(req.body);
+   if(!auth?.challenge)return reply.code(503).send({error:"Recovery authentication unavailable"});
+   return {data:await auth.challenge(req.headers.origin!)};
+  });
+  instance.post("/v1/recovery/wallet/session",async(req,reply)=>{
+   const b=z.object({id:z.string().uuid(),signature:z.string().max(100)}).strict().parse(req.body);
+   try{if(!auth?.login)throw new Error();return {data:await auth.login(req.headers.origin!,b.id,b.signature)};}catch{return reply.code(401).send({error:"Old wallet signature is invalid, expired or already used"});}
   });
   instance.get("/v1/recovery/status",async()=>({data:{inventory:await store!.inventory(),attempt:await store!.latest(),history:await store!.history()}}));
   instance.post("/v1/recovery/read",async(req)=>{

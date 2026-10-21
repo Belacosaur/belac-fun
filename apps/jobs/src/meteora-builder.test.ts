@@ -10,7 +10,7 @@ it("only prepares station five with a distinct valid mint and the fixed challeng
   expect(() => checkMeteoraInput({ wallet: CHALLENGE_WALLET, station: 5, mint: CHALLENGE_WALLET })).toThrow();
 });
 it("replays the full captured unsigned builder and preserves principal/fee separation", async () => {
-  const fixture = JSON.parse(await readFile(new URL("./fixtures/meteora-builder-mainnet.json", import.meta.url), "utf8"));
+  const fixture = JSON.parse(await readFile(new URL("./fixtures/meteora-new-wallet-synthetic.json", import.meta.url), "utf8"));
   vi.spyOn(Date, "now").mockReturnValue(Date.parse(fixture.plan.preparedAt));
   const calls: string[] = [], queue = [...fixture.calls];
   const fetcher = (async (url: string, init: RequestInit) => {

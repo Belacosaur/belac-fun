@@ -1,12 +1,12 @@
 import * as k from "@solana/kit";
 import type { MeteoraPlan } from "../../../../packages/contracts/src/trades";
-import { CHALLENGE_WALLET, METEORA_POOL } from "../../../../packages/contracts/src/trades";
+import { CHALLENGE_WALLET, METEORA_POOL, TRADE_TOKEN_ACCOUNTS } from "../../../../packages/contracts/src/trades";
 export const decode64 = (s: string) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 export const encode64 = (b: Uint8Array | k.ReadonlyUint8Array) => btoa(String.fromCharCode(...b));
 export const digest = async (b: Uint8Array | k.ReadonlyUint8Array) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new Uint8Array(b)))).map(x => x.toString(16).padStart(2, "0")).join("");
 const check = (v: unknown, message = "Transaction differs from the reviewed Meteora plan") => { if (!v) throw new Error(message); };
 const program = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG", token = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", router = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
-const usdc = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", sol = "So11111111111111111111111111111111111111112", usdcAta = "8DDPMR9LcM7YaHfwq41TteyGpnFi222gCgDEZUuy5PmE", wsolAta = "G5gUmEtvsE2RAj9gFSDP5ZgZ5WW4CeNRchj3r8fE4uvf";
+const usdc = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", sol = "So11111111111111111111111111111111111111112", usdcAta = TRADE_TOKEN_ACCOUNTS.usdc, wsolAta = TRADE_TOKEN_ACCOUNTS.wsol;
 export async function browserRpc<T>(method: "getGenesisHash" | "getBlockHeight" | "getMultipleAccounts" | "sendTransaction", params: unknown[]): Promise<T> {
   const endpoint = import.meta.env.VITE_SOLANA_RPC_URL || "https://solana-rpc.publicnode.com";
   const r = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }), signal: AbortSignal.timeout(20000) });
@@ -20,6 +20,9 @@ export async function validateMeteoraPlan(plan: MeteoraPlan, mint: string, now =
   check(BigInt(plan.maxSpendUsdcAtoms) > 0n && BigInt(plan.maxSpendUsdcAtoms) <= 10000000n);
   check(BigInt(plan.maxSwapUsdcAtoms) + BigInt(plan.maxDepositUsdcAtoms) === BigInt(plan.maxSpendUsdcAtoms));
   check(BigInt(plan.feeLamports) <= 12000n && BigInt(plan.rentLamports) === 7223760n && BigInt(plan.feePoolAfterLamports) >= 10000000n);
+  check(BigInt(plan.feePoolBeforeLamports)<=19859400n&&BigInt(plan.beforeNativeLamports)>=BigInt(plan.feePoolBeforeLamports));
+  check(BigInt(plan.feePoolAfterLamports)===BigInt(plan.feePoolBeforeLamports)-BigInt(plan.rentLamports)-BigInt(plan.feeLamports));
+  check(BigInt(plan.beforeUsdcAtoms)>=BigInt(plan.maxSpendUsdcAtoms),"USDC strategy capital is required; SOL fee reserves cannot fund strategy principal");
   const bytes = decode64(plan.messageBase64); check(await digest(bytes) === plan.messageHash);
   const tx = k.getTransactionDecoder().decode(decode64(plan.wireBase64)); check(await digest(tx.messageBytes) === plan.messageHash);
   const c = k.getCompiledTransactionMessageDecoder().decode(bytes); if (c.version !== 0) throw new Error("Expected a version zero transaction"); check(c.lifetimeToken === plan.blockhash);
@@ -56,6 +59,7 @@ export async function validateMeteoraPlan(plan: MeteoraPlan, mint: string, now =
   return { tx, tables: tableKeys };
 }
 export async function verifyLivePlanContext(plan: MeteoraPlan) {
+  await validateMeteoraPlan(plan,plan.mint);
   check(await browserRpc("getGenesisHash", []) === "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d", "Wallet RPC must use mainnet");
   check(await browserRpc<number>("getBlockHeight", [{ commitment: "confirmed" }]) < plan.lastValidBlockHeight - 8, "Transaction is expiring. Refresh before signing.");
   const keys = Object.keys(plan.lookupTables);
@@ -80,6 +84,7 @@ export async function verifyLivePlanContext(plan: MeteoraPlan) {
   for (let i = 0; i < 2; i++) { const vault = raw.value[1 + i]!; check(vault.owner === token && !vault.executable); const t = decode64(vault.data[0]); check(t.length === 165 && t[108] === 1); check(k.getAddressDecoder().decode(t.subarray(0, 32)) === (i ? usdc : sol)); check(k.getAddressDecoder().decode(t.subarray(32, 64)) === amm); }
 }
 export async function finishWalletSignature(plan: MeteoraPlan, signedBytes: Uint8Array, mint: k.KeyPairSigner) {
+  await validateMeteoraPlan(plan,mint.address);
   const tx = k.getTransactionDecoder().decode(signedBytes); check(await digest(tx.messageBytes) === plan.messageHash, "Wallet changed the reviewed transaction");
   const signature = tx.signatures[k.address(CHALLENGE_WALLET)]; check(signature && signature.some(x => x !== 0), "Wallet signature missing");
   const publicKey = await crypto.subtle.importKey("raw", new Uint8Array(k.getAddressEncoder().encode(k.address(CHALLENGE_WALLET))), { name: "Ed25519" }, false, ["verify"]);

@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from "vitest";
 import {readFile} from "node:fs/promises";
 import { recoveryStep, validateRecoveryRequest, RECOVERY_DESTINATION, isClosedAccount,buildRecoveryPlan,scanAccounts } from "./recovery.js";
-import { CHALLENGE_WALLET } from "../../../packages/contracts/src/trades.js";
+import { RECOVERY_SOURCE as CHALLENGE_WALLET } from "../../../packages/contracts/src/recovery.js";
 import * as k from "@solana/kit";
 const fixture=JSON.parse(await readFile(new URL("./fixtures/recovery-orca-mainnet.json",import.meta.url),"utf8"));
 function simulationBatches(calls:{request:{method:string;params:unknown[]};response:{result?:{value:{accounts:unknown[]}}};status:number}[]){

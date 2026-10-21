@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import * as k from "@solana/kit";
-import type { MeteoraPlan, MeteoraReceipt } from "../../../packages/contracts/src/trades.js";
+import {CHALLENGE_WALLET,type MeteoraPlan,type MeteoraReceipt} from "../../../packages/contracts/src/trades.js";
 import { DAMM, type DammAccount, decodeDamm } from "./meteora-damm.js";
 import { METEORA_ACCOUNTS } from "./meteora-builder.js";
 import type { TradeRpc } from "./trade-rpc.js";
@@ -11,6 +11,7 @@ export interface ChainTransaction {
 }
 interface TokenRow { accountIndex: number; mint: string; owner: string; uiTokenAmount: { amount: string; decimals: number } }
 export async function verifyMeteoraReceipt(plan: MeteoraPlan, signature: string, rpc: TradeRpc): Promise<MeteoraReceipt> {
+  assert.equal(plan.wallet,CHALLENGE_WALLET,"Retired-wallet entries cannot be attributed to the new wallet");
   const tx = await rpc<ChainTransaction | null>("getTransaction", [signature, { encoding: "base64", commitment: "finalized", maxSupportedTransactionVersion: 0 }]); assert(tx && !tx.meta.err && tx.blockTime, "Finalized transaction unavailable");
   const decoded = k.getTransactionDecoder().decode(Buffer.from(tx.transaction[0], "base64"));
   assert.equal(k.getSignatureFromTransaction(decoded), signature); assert.equal(createHash("sha256").update(Buffer.from(decoded.messageBytes)).digest("hex"), plan.messageHash);

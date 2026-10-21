@@ -1,4 +1,5 @@
-export const CHALLENGE_WALLET = "HBFn6VWPLNt44i8zqUoNs4mMtqyyxNTyWwQqfH5TBx8j";
+export const CHALLENGE_WALLET = "3nJzqZMc4WsGhCmD7vG2SmUzHDyD3Q58vxLbWUvUjSLX";
+export const TRADE_TOKEN_ACCOUNTS = { usdc: "6tB6jxYyKVLRvb5GmJtsoDUayUU6Us67y7w1HMoUaxYy", wsol: "C6K1LEGJ48YdTXzYYvHEZoRV1cMS5ZGzrYaPHDcWc77c" } as const;
 export const METEORA_POOL = "8Pm2kZpnxD3hoMmt4bjStX2Pw2Z9abpbHzZxMPqxPmie";
 export type TradeState = "queued" | "preparing" | "ready" | "awaiting_submission" | "submitted" | "confirmed" | "reconciled" | "failed" | "expired" | "unknown" | "cancelled";
 export interface MeteoraPlan {

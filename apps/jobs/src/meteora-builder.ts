@@ -4,12 +4,12 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import * as k from "@solana/kit";
 import { Decimal } from "decimal.js";
-import { CHALLENGE_WALLET, type MeteoraPlan } from "../../../packages/contracts/src/trades.js";
+import { CHALLENGE_WALLET, TRADE_TOKEN_ACCOUNTS, type MeteoraPlan } from "../../../packages/contracts/src/trades.js";
 import { DAMM, verifiedDammPool, decodeDamm, dammAmounts, capDammBudget, dammInstruction, type DammAccount } from "./meteora-damm.js";
 import { checkMeteoraRoute, WHIRLPOOL, ROUTER, type Quote, type RpcInstruction } from "./meteora-route.js";
 import { tradeRpc, type TradeRpc } from "./trade-rpc.js";
 const sdk = createRequire(createRequire(import.meta.url).resolve("@orca-so/whirlpools")), client = sdk("@orca-so/whirlpools-client"), core = sdk("@orca-so/whirlpools-core");
-export const METEORA_ACCOUNTS = { wallet: CHALLENGE_WALLET, usdc: "8DDPMR9LcM7YaHfwq41TteyGpnFi222gCgDEZUuy5PmE", wsol: "G5gUmEtvsE2RAj9gFSDP5ZgZ5WW4CeNRchj3r8fE4uvf", hold: 93680067n, orcaWsol: 209636n, feePool: 19859400n };
+export const METEORA_ACCOUNTS = { wallet: CHALLENGE_WALLET, ...TRADE_TOKEN_ACCOUNTS, hold: 0n, orcaWsol: 0n, feePool: 19859400n };
 export function checkMeteoraInput(input: { wallet: string; station: number; mint: string }) {
   assert.equal(input.wallet, CHALLENGE_WALLET); assert.equal(input.station, 5); k.address(input.mint);
   assert(![CHALLENGE_WALLET, ...Object.values(DAMM), METEORA_ACCOUNTS.usdc, METEORA_ACCOUNTS.wsol].includes(input.mint));
@@ -33,10 +33,11 @@ export async function buildMeteoraEntry(input: { wallet: string; station: number
   checkMeteoraInput(input); const rpc = tradeRpc(endpoint, fetcher), m = METEORA_ACCOUNTS, started = Date.now();
   assert.equal(await rpc("getGenesisHash", []), "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d");
   const before = await accounts(rpc, [m.wallet, m.usdc, m.wsol, DAMM.pool, DAMM.vaultA, DAMM.vaultB, input.mint]);
-  assert(before[0] && before[1] && before[2] && before[3] && !before[6], "Position mint already exists");
+  assert(before[0] && before[3] && !before[6], "Wallet/pool unavailable or position mint already exists");
+  assert(before[1] && before[2], "Fund the new wallet with up to 10 USDC and initialize its USDC/WSOL token accounts before preparing an entry");
   const state = verifiedDammPool(before[3]), stable = tokenAtoms(before[1], DAMM.usdc, m.wallet), wrapped = tokenAtoms(before[2], DAMM.sol, m.wallet), native = BigInt(before[0].lamports);
   assert(operatingAvailable > 0n && operatingAvailable <= m.feePool);
-  assert(native >= m.hold + operatingAvailable && stable >= 70077648n && wrapped >= m.orcaWsol, "Reconcile protected holdings before preparing");
+  assert(native >= m.hold + operatingAvailable && stable >= 10000000n && wrapped >= m.orcaWsol, "Reconcile protected holdings before preparing");
   tokenAtoms(before[4]!, DAMM.sol, DAMM.authority); tokenAtoms(before[5]!, DAMM.usdc, DAMM.authority);
   const price = new Decimal(state.sqrt_price.toString()).pow(2).div(new Decimal(2).pow(128)).mul(1000);
   let lo = 0n, hi = 10n ** 35n;

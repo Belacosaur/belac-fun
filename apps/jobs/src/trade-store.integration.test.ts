@@ -4,8 +4,9 @@ import pg from "pg";
 import { readFile } from "node:fs/promises";
 import { TradeStore } from "./trade-store.js";
 import { CHALLENGE_WALLET, type MeteoraPlan } from "../../../packages/contracts/src/trades.js";
+import {RECOVERY_SOURCE} from "../../../packages/contracts/src/recovery.js";
 let container: StartedPostgreSqlContainer, pool: pg.Pool, store: TradeStore;
-const fixture = JSON.parse(await readFile(new URL("./fixtures/meteora-builder-mainnet.json", import.meta.url), "utf8"));
+const fixture = JSON.parse(await readFile(new URL("./fixtures/meteora-new-wallet-synthetic.json", import.meta.url), "utf8"));
 beforeAll(async () => {
   container = await new PostgreSqlContainer("postgres:16-alpine").start();
   pool = new pg.Pool({ connectionString: container.getConnectionUri(), max: 4 });
@@ -14,6 +15,17 @@ beforeAll(async () => {
 }, 120000);
 afterAll(async () => { await pool?.end(); await container?.stop(); }, 30000);
 beforeEach(async () => { await pool.query("truncate wallet_trade_attempts,wallet_trade_fee_events,wallet_trade_sessions,wallet_trade_challenges"); });
+it("isolates retired-wallet login challenges, sessions, attempts and queue claims from the new wallet",async()=>{
+ const old=new TradeStore(pool,()=>true,RECOVERY_SOURCE),current=new TradeStore(pool,()=>true);
+ const challenge=await old.challenge("https://belac.fun");
+ await expect(current.login("https://belac.fun",challenge.id,"test-proof")).rejects.toThrow();
+ const session=await old.login("https://belac.fun",challenge.id,"test-proof");
+ expect(await old.authorized("https://belac.fun",session.token)).toBe(true);expect(await current.authorized("https://belac.fun",session.token)).toBe(false);
+ const oldAttempt=await old.create(fixture.plan.mint);expect(await current.get(oldAttempt.id)).toBeNull();expect(await current.claim()).toBeNull();
+ await expect(current.begin(oldAttempt.id)).rejects.toThrow();await expect(current.publish(oldAttempt.id,{...fixture.plan,wallet:RECOVERY_SOURCE})).rejects.toThrow();
+ const fresh=await current.challenge("https://belac.fun");const token=await current.login("https://belac.fun",fresh.id,"new-test-proof");
+ expect(await old.authorized("https://belac.fun",token.token)).toBe(false);expect(token.wallet).toBe(CHALLENGE_WALLET);
+});
 async function ready() { const a = await store.create(fixture.plan.mint); await store.claim(); await store.publish(a.id, { ...fixture.plan, expiresAt: new Date(Date.now() + 45000).toISOString() } as MeteoraPlan); return a; }
 it("serializes concurrent queue claims, signature requests and permanent station reservations", async () => {
   const a = await store.create(fixture.plan.mint);

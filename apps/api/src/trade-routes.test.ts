@@ -3,10 +3,21 @@ import Fastify from "fastify";
 import { registerTradeRoutes } from "./trade-routes.js";
 import type { TradeStore } from "../../jobs/src/trade-store.js";
 import { CHALLENGE_WALLET } from "../../../packages/contracts/src/trades.js";
+import {RECOVERY_SOURCE} from "../../../packages/contracts/src/recovery.js";
+it("issues trade logins only for the new wallet and keeps preparation disabled by default",async()=>{
+ const app=Fastify();let challenges=0,created=0;
+ const store={authorized:async()=>true,challenge:async()=>{challenges++;return {wallet:CHALLENGE_WALLET};},create:async()=>{created++;}} as unknown as TradeStore;
+ registerTradeRoutes(app,null,"https://belac.fun",store);
+ const request=(url:string,payload?:object)=>app.inject({method:payload?"POST":"GET",url,headers:{origin:"https://belac.fun",authorization:"Bearer owner"},payload});
+ expect((await request("/v1/trades/wallet/challenge",{wallet:CHALLENGE_WALLET})).statusCode).toBe(200);
+ await request("/v1/trades/wallet/challenge",{wallet:RECOVERY_SOURCE});expect(challenges).toBe(1);
+ const status=(await request("/v1/trades/status")).json().data;expect(status).toMatchObject({wallet:CHALLENGE_WALLET,budgetUsdc:"10",preparationEnabled:false,automatedExecutionEnabled:false,feePoolSeparate:true});
+ expect((await request("/v1/trades/meteora/prepare",{station:5,mint:"AqCA9WUnMD5a1WetTvGiqyfns5AVyua6gXSzcJgduYCk",budgetUsdc:"10"})).statusCode).toBe(403);expect(created).toBe(0);await app.close();
+});
 it("only offers owner-authorized Meteora preparation and never server execution", async () => {
   const app = Fastify(); let created = 0;
   const store = { authorized: async (_origin: string, token: string) => token === "owner", challenge: async () => ({ id: "challenge" }), create: async () => { created++; return { state: "queued" }; }, latest: async () => null } as unknown as TradeStore;
-  registerTradeRoutes(app, null, "http://localhost:5186", store);
+  registerTradeRoutes(app, null, "http://localhost:5186", store,false,true);
   const request = (url: string, payload: unknown, authorization = "Bearer owner", origin = "http://localhost:5186") => app.inject({ method: "POST", url, headers: { authorization, origin }, payload: payload as object });
   expect((await request("/v1/trades/meteora/prepare", { station: 5, mint: CHALLENGE_WALLET, budgetUsdc: "10" }, "")).statusCode).toBe(401);
   expect((await request("/v1/trades/wallet/challenge", { wallet: CHALLENGE_WALLET }, "", "https://attacker.invalid")).statusCode).toBe(403);

@@ -17,7 +17,7 @@ function owner(){
  const account={address:fixture.plan.source};mock.wallets=[{name:"Test Solflare",accounts:[account],features:{"standard:connect":{connect:async()=>({accounts:[account]})},"solana:signMessage":{signMessage:async()=>[{signature:new Uint8Array(64)}]},"solana:signTransaction":{signTransaction:async()=>{mock.events.push("wallet");return mock.sign();}}}}];
  let attempt:unknown=null;const plan={...fixture.plan,expiresAt:new Date(Date.now()+45000).toISOString()};
  vi.stubGlobal("fetch",vi.fn(async(url:string)=>{let data:unknown;const path=url.split("/v1/")[1];mock.events.push(path!);
-  if(path==="trades/wallet/challenge")data={id:"nonce",message:"Login only"};else if(path==="trades/wallet/session")data={token:"owner"};else if(path==="recovery/status")data={inventory:plan.before,attempt,history:[]};else if(path==="recovery/prepare"){attempt={id:plan.id,state:"ready",plan,signature:null,error:null};data=attempt;}else data={accepted:true};
+  if(path==="recovery/wallet/challenge")data={id:"nonce",message:"Login only"};else if(path==="recovery/wallet/session")data={token:"owner"};else if(path==="recovery/status")data={inventory:plan.before,attempt,history:[]};else if(path==="recovery/prepare"){attempt={id:plan.id,state:"ready",plan,signature:null,error:null};data=attempt;}else data={accepted:true};
   return new Response(JSON.stringify({data}),{status:200});
  }));
 }

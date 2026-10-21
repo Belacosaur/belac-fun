@@ -2,8 +2,9 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { readFile } from "node:fs/promises";
 import { CHALLENGE_WALLET } from "../../../../packages/contracts/src/trades";
+import {RECOVERY_SOURCE} from "../../../../packages/contracts/src/recovery";
 import { MeteoraTrade } from "./MeteoraTrade";
-const fixture = JSON.parse(await readFile("../jobs/src/fixtures/meteora-builder-mainnet.json", "utf8"));
+const fixture = JSON.parse(await readFile("../jobs/src/fixtures/meteora-new-wallet-synthetic.json", "utf8"));
 const mock = vi.hoisted(() => ({ wallets: [] as unknown[], events: [] as string[], sign: vi.fn(), finish: vi.fn(), generate: vi.fn() }));
 vi.mock("@wallet-standard/app", () => ({ getWallets: () => ({ get: () => mock.wallets, on: () => () => undefined }) }));
 vi.mock("@solana/kit", async original => ({ ...await original<typeof import("@solana/kit")>(), generateKeyPairSigner: () => mock.generate() }));
@@ -16,7 +17,7 @@ beforeEach(() => {
   const attempt = { id: "attempt", wallet: CHALLENGE_WALLET, state: "ready", plan: { ...fixture.plan, expiresAt: new Date(Date.now() + 45000).toISOString() } };
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
     const path = String(url); mock.events.push(path.split("/v1/trades/")[1]!);
-    const data = path.endsWith("wallet/challenge") ? { id: "nonce", message: "Login only" } : path.endsWith("wallet/session") ? { token: "session" } : path.endsWith("latest") ? null : path.endsWith("/signature") ? { ...attempt, state: "submitted", signature: "mock-signature" } : attempt;
+    const data = path.endsWith("wallet/challenge") ? { id: "nonce", message: "Login only" } : path.endsWith("wallet/session") ? { token: "session" } : path.endsWith("status") ? {wallet:CHALLENGE_WALLET,preparationEnabled:true} : path.endsWith("latest") ? null : path.endsWith("/signature") ? { ...attempt, state: "submitted", signature: "mock-signature" } : attempt;
     return new Response(JSON.stringify({ data }), { status: 200 });
   }));
 });
@@ -29,6 +30,16 @@ it("shows no wallet execution action until an authenticated preparation exists",
   await waitFor(() => expect(screen.getByText("Sign and execute in wallet")).toBeEnabled());
   expect(screen.getByText("Recoverable account rent")).toBeInTheDocument();
   expect(mock.sign).not.toHaveBeenCalled(); expect(mock.events).not.toContain("sendTransaction");
+});
+it("rejects the retired Solflare account before requesting any login signature",async()=>{
+ const signMessage=vi.fn();mock.wallets=[{name:"Solflare",accounts:[{address:RECOVERY_SOURCE}],features:{"standard:connect":{connect:async()=>({accounts:[{address:RECOVERY_SOURCE}]})},"solana:signMessage":{signMessage},"solana:signTransaction":{signTransaction:mock.sign}}}];
+ render(<MeteoraTrade onClose={()=>{}} onRefresh={()=>{}}/>);fireEvent.click(screen.getByText("Connect and authenticate"));
+ await waitFor(()=>expect(screen.getByRole("alert")).toHaveTextContent(CHALLENGE_WALLET));expect(signMessage).not.toHaveBeenCalled();expect(mock.sign).not.toHaveBeenCalled();
+});
+it("connects the new wallet but disables preparation and signing when preparation is off",async()=>{
+ const original=globalThis.fetch;vi.stubGlobal("fetch",vi.fn(async(url:string,init:RequestInit)=>String(url).endsWith("/status")?new Response(JSON.stringify({data:{wallet:CHALLENGE_WALLET,preparationEnabled:false}})):original(url,init)));
+ render(<MeteoraTrade onClose={()=>{}} onRefresh={()=>{}}/>);fireEvent.click(screen.getByText("Connect and authenticate"));
+ await waitFor(()=>expect(screen.getByText("Prepare $10 Meteora entry")).toBeDisabled());expect(screen.getByText(/New wallet connected\. Quote preparation is disabled/)).toBeInTheDocument();expect(mock.sign).not.toHaveBeenCalled();expect(mock.events).not.toContain("sendTransaction");
 });
 it("registers the signature before mocked browser submission after an explicit click", async () => {
   mock.sign.mockResolvedValue([{ signedTransaction: new Uint8Array([1]) }]); mock.finish.mockResolvedValue({ wire: new Uint8Array([1]), signature: "mock-signature" });
