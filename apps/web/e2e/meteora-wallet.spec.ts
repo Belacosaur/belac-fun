@@ -1,0 +1,21 @@
+import { test, expect } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+test("Meteora alone offers owner wallet review, preserving separate fees", async ({ page }) => {
+  test.setTimeout(120000); const errors: string[] = []; page.on("pageerror", e => errors.push(e.message));
+  const body = JSON.parse(await readFile(new URL("./fixtures/meteora-prepared-studio.json", import.meta.url), "utf8"));
+  body.data.generatedAt = new Date().toISOString(); body.meta.stale = false;
+  if (!process.env.METEORA_WALLET_LIVE_BROWSER) await page.route("**/v1/studio", route => route.fulfill({ json: body }));
+  await page.setViewportSize({ width: 1600, height: 1050 }); await page.emulateMedia({ reducedMotion: "reduce" }); await page.goto(process.env.METEORA_WALLET_LIVE_BROWSER ? "http://127.0.0.1:5186/station" : "/station");
+  const scene = page.locator(".studio-scene"); await expect(scene).toHaveAttribute("data-ready", "true", { timeout: 60000 });
+  await page.getByRole("button", { name: "Station 1: Jupiter Swap", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Review Meteora trade" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Station 5: Meteora", exact: true }).click();
+  await page.getByRole("button", { name: "Review Meteora trade" }).click();
+  const dialog = page.getByRole("dialog", { name: "Review your SOL/USDC entry" });
+  await expect(dialog).toBeVisible(); await expect(dialog).toContainText("10 USDC"); await expect(dialog).toContainText("separate SOL fee pool");
+  await expect(dialog.getByRole("button", { name: "Connect and authenticate" })).toBeDisabled();
+  await expect(dialog).toContainText("No compatible wallet detected");
+  await expect(dialog.getByRole("button", { name: "Sign and execute in wallet" })).toHaveCount(0);
+  await page.screenshot({ path: "../../artifacts/meteora/2026-10-21/wallet-review-connect.png" });
+  expect(errors).toEqual([]);
+});

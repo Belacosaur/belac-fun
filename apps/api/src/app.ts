@@ -6,6 +6,9 @@ import { registerAdminRoutes } from "./admin-routes.js";
 import type { Actor } from "./auth.js";
 import { registerPublicRoutes } from "./public-routes.js";
 import { registerSecurity } from "./security.js";
+import { registerStudioRoutes } from "./studio-routes.js";
+import { registerResearchRoutes } from "./research-routes.js";
+import { registerTradeRoutes } from "./trade-routes.js";
 
 export type ApiEnv = {
   APP_ENV?: string;
@@ -18,6 +21,7 @@ export type ApiEnv = {
   ACCESS_AUD?: string;
   R2_BUCKET?: string;
   R2_ACCOUNT_ID?: string;
+  EXPERIMENT_WALLET_ADDRESS?: string;
 };
 
 declare module "fastify" {
@@ -34,7 +38,7 @@ export function buildApp(env: ApiEnv = process.env): FastifyInstance {
     genReqId: () => randomUUID(),
   });
   const databaseUrl = env.DATABASE_URL ?? "";
-  const pool = databaseUrl ? new pg.Pool({ connectionString: databaseUrl }) : null;
+  const pool = databaseUrl ? new pg.Pool({ connectionString: databaseUrl, max: 5, connectionTimeoutMillis: 5000, query_timeout: 10_000 }) : null;
   const rateLimitMax = Number(env.RATE_LIMIT_MAX || 60);
 
   app.addHook("onClose", async () => {
@@ -82,6 +86,9 @@ export function buildApp(env: ApiEnv = process.env): FastifyInstance {
       }
     });
     registerPublicRoutes(instance, pool);
+    registerStudioRoutes(instance, pool, env.EXPERIMENT_WALLET_ADDRESS);
+    registerResearchRoutes(instance, pool, env.EXPERIMENT_WALLET_ADDRESS, env);
+    registerTradeRoutes(instance, pool, env.ALLOWED_ORIGINS ?? "");
     registerAdminRoutes(instance, pool, env);
   });
 

@@ -1,0 +1,158 @@
+{
+  "reviewedOn": "2026-10-20",
+  "scope": "Updated lineup: documented API/SDK access and implemented read-only coverage. Documented access does not mean an adapter is built or execution enabled.",
+  "summary": {
+    "initiativeSlots": 10,
+    "distinctPlatformBrands": 8,
+    "slotsWithDocumentedExternalApiOrSdk": 9,
+    "ownedPlatformSlots": 1,
+    "executionEnabled": false
+  },
+  "platforms": [
+    {
+      "station": 1,
+      "provider": "Jupiter Swap",
+      "initiative": "Spot buy and hold",
+      "status": "documented",
+      "access": "REST Swap API V2",
+      "execution": "Quote and build an unsigned transaction, sign locally, submit via execute or RPC.",
+      "tracking": "Live read-only quote probe plus shared wallet balances; strategy attribution pending.",
+      "requirements": "Production API key recommended; current docs also permit rate-limited keyless access. Local signing for execution.",
+      "sources": [
+        "https://developers.jup.ag/docs/swap"
+      ]
+    },
+    {
+      "station": 2,
+      "provider": "Raydium",
+      "initiative": "Active spot trading - buy, sell, reinvest",
+      "status": "documented",
+      "access": "Official Trade API and SDK",
+      "execution": "Server-built swap transactions; signing and execution remain disabled.",
+      "tracking": "Live read-only quote probe plus shared wallet balances; fill attribution pending.",
+      "requirements": "Token selection, allocation accounting and execution adapter pending.",
+      "sources": [
+        "https://docs.raydium.io/sdk-api/trade-api"
+      ]
+    },
+    {
+      "station": 3,
+      "provider": "Jupiter Perps",
+      "initiative": "Leveraged long",
+      "status": "documented",
+      "access": "Official Perps REST API",
+      "execution": "Documented position transaction builders; execution disabled.",
+      "tracking": "Open long positions via GET /v1/positions; empty account verified; nonempty equity reconciliation pending.",
+      "requirements": "Select market, fund collateral, verify fees and size limits before any execution.",
+      "sources": [
+        "https://perps-api.jup.ag/v1/docs"
+      ]
+    },
+    {
+      "station": 4,
+      "provider": "Pacifica",
+      "initiative": "Leveraged short",
+      "status": "documented",
+      "access": "REST and WebSocket APIs; official Python SDK",
+      "execution": "Signed order placement and cancellation; documented order endpoint supports an optional agent wallet.",
+      "tracking": "Venue positions, collateral, orders and fills in addition to on-chain deposits/withdrawals.",
+      "requirements": "Account setup, collateral deposit, signing configuration and chosen market minimum sizes must be verified before funding.",
+      "sources": [
+        "https://docs.pacifica.fi/api-documentation/api",
+        "https://docs.pacifica.fi/api-documentation/api/websocket/trading-operations/create-order"
+      ]
+    },
+    {
+      "station": 5,
+      "provider": "Meteora",
+      "initiative": "Liquidity providing",
+      "status": "documented",
+      "access": "Official TypeScript/Rust SDKs and public data APIs",
+      "execution": "Build signed on-chain instructions for liquidity deposits, removals and fee claims using the selected pool product's SDK.",
+      "tracking": "Pool and position accounts, underlying token amounts and unclaimed fees; DLMM APIs expose portfolio and position data.",
+      "requirements": "Select DLMM or DAMM and a pool; RPC and local signing. Account-creation/rent costs are separate from supplied liquidity.",
+      "sources": [
+        "https://docs.meteora.ag/get-started",
+        "https://docs.meteora.ag/developer-guides/dlmm/typescript-sdk/examples.md",
+        "https://docs.meteora.ag/developer-guides/dlmm/api-reference/overview.md"
+      ]
+    },
+    {
+      "station": 6,
+      "provider": "Kamino",
+      "initiative": "Lending USDC",
+      "status": "documented",
+      "access": "REST APIs and official TypeScript SDK",
+      "execution": "Build deposit/withdraw instructions for lending or Earn vaults; sign locally.",
+      "tracking": "User positions, shares, exchange rates, interest and market data.",
+      "requirements": "Choose the exact USDC reserve or vault and account type; RPC/signing requirements depend on integration path.",
+      "sources": [
+        "https://kamino.com/docs/build"
+      ]
+    },
+    {
+      "station": 7,
+      "provider": "Pump.fun",
+      "initiative": "Buy an existing memecoin",
+      "status": "documented",
+      "access": "Official on-chain instructions, IDLs, pump-sdk and pump-swap-sdk",
+      "execution": "Programmatic buy/sell on bonding curves and PumpSwap through official SDK transaction builders.",
+      "tracking": "Solana balances, trade events, bonding curve state and migration into PumpSwap.",
+      "requirements": "RPC and local signing. This is an official SDK/on-chain route, not a claim of an official public hosted REST trading API. Third-party PumpPortal is not Pump.fun.",
+      "sources": [
+        "https://github.com/pump-fun/pump-public-docs",
+        "https://raw.githubusercontent.com/pump-fun/pump-public-docs/main/README.md"
+      ]
+    },
+    {
+      "station": 8,
+      "provider": "Orca",
+      "initiative": "Concentrated liquidity providing",
+      "status": "documented",
+      "access": "Official Whirlpools SDK and on-chain accounts",
+      "execution": "SDK liquidity instructions; execution disabled.",
+      "tracking": "Official SDK discovers mainnet SPL/Token-2022 positions and bundles; USD/fee valuation for nonempty positions remains pending.",
+      "requirements": "Choose pool and price range; implement read-only position valuation.",
+      "sources": [
+        "https://docs.orca.so",
+        "https://github.com/orca-so/whirlpools"
+      ]
+    },
+    {
+      "station": 9,
+      "provider": "Ript",
+      "initiative": "Open one pack every week",
+      "status": "pending_owner_custom_pack",
+      "access": "Owned platform; public catalog and authenticated collector endpoints",
+      "execution": "Disabled. Pack, budget and production network unresolved; no weekly schedule configured.",
+      "tracking": "Paused by owner request; no catalog polling or purchase activity.",
+      "requirements": "Owner will build a custom challenge pack; resume integration after pack/network configuration is supplied.",
+      "sources": [
+        "https://ript.fun/play",
+        "https://ript-backend-production.up.railway.app/opening/packs"
+      ]
+    },
+    {
+      "station": 10,
+      "provider": "Pump.fun",
+      "initiative": "Create and launch our own memecoin",
+      "status": "documented",
+      "access": "Official pump-sdk and create instructions",
+      "execution": "Documented token creation route; no launch performed or scheduled.",
+      "tracking": "Distinct mint, creation costs, own inventory, fees and realized proceeds; separate from station 7.",
+      "requirements": "Choose name, symbol, metadata, mint and budget; explicit activation required.",
+      "sources": [
+        "https://github.com/pump-fun/pump-public-docs"
+      ]
+    }
+  ],
+  "backendImplications": [
+    "The execution service is deployed but strictly disabled and has no signing credentials.",
+    "Ten strategies share one public wallet; stable strategy keys prevent replaced stations from inheriting old observations.",
+    "Token holdings alone cannot distinguish strategies. Allocation, fee and transaction attribution remains required.",
+    "Orca position reads are pending. Ript catalog reads do not track collector holdings or verify mainnet purchasing.",
+    "The $100 is a planned budget. Fees, rent, market minimums and Ript pack pricing remain to be budgeted.",
+    "Owner confirmed $100 strategy capital plus a separate SOL pool for fees and account rent; fee-pool accounting is separate from strategy capital.",
+    "Nine active read scopes have been implemented and checked against live sources; this is not funded execution validation. See funding-plan.md for remaining work."
+  ]
+}

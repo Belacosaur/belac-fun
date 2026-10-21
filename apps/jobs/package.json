@@ -16,6 +16,8 @@
   "dependencies": {
     "@belac/db": "workspace:*",
     "@belac/finance": "workspace:*",
+    "@orca-so/whirlpools": "8.0.1",
+    "@solana/kit": "^5.0.0",
     "decimal.js": "^10.6.0",
     "drizzle-orm": "^0.44.6",
     "pg": "^8.16.3"

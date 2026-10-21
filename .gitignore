@@ -5,3 +5,10 @@ dist
 !.env.example
 test-results
 playwright-report
+.secrets/
+.wrangler/
+artifacts/
+coverage/
+*.keypair.json
+*.private-key.txt
+*.solflare-private-key.txt

@@ -1,0 +1,22 @@
+{
+  "simulatedAt": "2026-10-21T02:59:21.311Z",
+  "pool": "8Pm2kZpnxD3hoMmt4bjStX2Pw2Z9abpbHzZxMPqxPmie",
+  "budgetUsdc": "10.000000",
+  "maxSpendUsdc": "9.934038",
+  "simulatedSpendUsdc": "9.884614",
+  "plannedSol": "0.067645597",
+  "plannedUsdc": "2.662075",
+  "residualWsol": "0.000338228",
+  "minimumCashUsdc": "0.065962",
+  "rentSol": "0.007223760",
+  "entryFeeSol": "0.000010000",
+  "entryMessageHash": "bdb7941f943581fa084c67f0a5fa0f65addfae5b60833927568c935c1ea5d894",
+  "roundtripMessageHash": "7cd25645c42b4529d71d87a7fc7c3418d1f75c3af682e5071cf81d4d0bb4364f",
+  "entryWireBytes": 968,
+  "roundtripWireBytes": 1073,
+  "exitMinSol": "0.067307369",
+  "exitMinUsdc": "2.648764",
+  "liquidity": "799806106291929419881438085",
+  "proof": "entry-and-roundtrip-simulated",
+  "requiresQuoteRefresh": true
+}

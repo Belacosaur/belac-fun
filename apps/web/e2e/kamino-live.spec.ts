@@ -1,0 +1,12 @@
+import {expect,test} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
+test('confirmed Kamino lending shows owned receipts, actual costs and separate fee pool',async({page})=>{
+ test.setTimeout(120000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ if(!process.env.KAMINO_LIVE_BROWSER){const body=JSON.parse(await readFile(new URL('./fixtures/kamino-live-studio.json',import.meta.url),'utf8'));body.data.generatedAt=new Date().toISOString();body.meta.stale=false;await page.route('**/v1/studio',route=>route.fulfill({json:body}));}
+ await page.setViewportSize({width:1600,height:1050});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/station');const scene=page.locator('.studio-scene');await expect(scene).toHaveAttribute('data-ready','true',{timeout:60000});await expect(page.getByRole('status')).toContainText('3 live positions',{timeout:30000});
+ await page.getByRole('button',{name:'Station 6: Kamino',exact:true}).click();await expect(scene).toHaveAttribute('data-active-station','6');await expect(scene).toHaveAttribute('data-agent-pose','greeting',{timeout:15000});
+ await expect(page.getByTestId('position-allocation')).toContainText('Allocation $10.00');const detail=page.getByTestId('kamino-preparation');await expect(detail).toContainText('Deposited 10.000000 USDC');await expect(detail).toContainText('Receipt tokens 8.295955');await expect(detail).toContainText('0.000005400 SOL');await expect(detail).toContainText('0.001488440 SOL');await expect(detail).not.toContainText('awaiting review');await expect(detail.getByRole('link',{name:'Transaction'})).toHaveAttribute('href',/2Z3TQQy8ApF5K2jPit5G569C4recEXMR/);await expect(page.getByTestId('strategy-pnl')).not.toHaveText('—');
+ await page.screenshot({path:'../../artifacts/execution/2026-10-21/kamino-live-centre.png'});
+ await page.getByRole('button',{name:'All positions',exact:false}).click();const rows=page.locator('.positions-table tbody tr');await expect(rows.nth(5)).toContainText('Allocation $10.00');await expect(rows.nth(5)).toContainText('USDC direct lending');await expect(rows.nth(5)).toContainText('Live position');await expect(rows.nth(5)).toContainText('Execution off');await expect(rows.nth(8)).toContainText('Pending');await expect(page.getByTestId('fee-pool')).toContainText('0.019859400 SOL available');await expect(page.locator('.positions-total')).toContainText('$70.00');await page.screenshot({path:'../../artifacts/execution/2026-10-21/kamino-live-overview.png'});
+ expect(errors).toEqual([]);
+});

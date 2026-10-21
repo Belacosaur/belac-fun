@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchLivePrice } from "./live-price";
+import { fetchLivePrice } from "./live-price.js";
 
 describe("live price", () => {
   it("does not call the network when no base url is configured", async () => {

@@ -1,0 +1,69 @@
+[
+  {
+    "name": "jupiter",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\jupiter.png",
+    "url": "https://jup.ag/apple-touch-icon.png",
+    "bytes": 16875
+  },
+  {
+    "name": "pacifica",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\pacifica.png",
+    "url": "https://www.pacifica.fi/imgs/icon-512x512.png",
+    "bytes": 50022
+  },
+  {
+    "name": "bulk",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\bulk.ico",
+    "url": "https://www.bulk.trade/favicon.ico?favicon.433f28e1.ico",
+    "bytes": 22577
+  },
+  {
+    "name": "meteora",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\meteora.png",
+    "url": "https://www.meteora.ag/apple/apple-icon-57x57.png",
+    "bytes": 2915
+  },
+  {
+    "name": "kamino",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\kamino.png",
+    "url": "https://kamino.com/apple-touch-icon.png",
+    "bytes": 1517
+  },
+  {
+    "name": "pump",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\pump.png",
+    "url": "https://pump.fun/icon2.png",
+    "bytes": 171040
+  },
+  {
+    "name": "axiom",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\axiom.png",
+    "url": "https://539387073-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/organizations%2FDXTwYvSKQ2pVi0g5GQRm%2Fsites%2Fsite_3vgMr%2Ficon%2F1vUMW6MDD5jb5oUjUbQ6%2Fxxx.png?alt=media&token=d2fb4520-b856-4966-a634-befc7059ba7b",
+    "bytes": 3346287
+  },
+  {
+    "name": "trojan",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\trojan.png",
+    "url": "https://3435436086-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/organizations%2FHepYnOtvUVfqCZFcL3Sd%2Fsites%2Fsite_dwo9K%2Ficon%2FEOFIIEcPYU5P0ixbQg8T%2Ffav.png?alt=media&token=41419870-2510-417d-a137-bf1fd9f2dd96",
+    "bytes": 3688
+  },
+  {
+    "name": "raydium",
+    "path": "C:\\Users\\caleb\\.codex\\visualizations\\2026\\10\\20\\01a1585f-a5d2-7370-94bf-75f5ecb862b1\\platform-logos\\raydium.png",
+    "url": "https://docs.raydium.io/mintlify-assets/_mintlify/favicons/raydium/ul9SCN9vmhSkMQHt/_generated/favicon/apple-touch-icon.png",
+    "bytes": 6816
+  },
+  {
+    "url": "https://www.orca.so/images/favicon.png",
+    "name": "orca",
+    "bytes": 3056,
+    "path": "public/station/orca.png"
+  },
+  {
+    "url": "https://ript.fun/ripticon1024.png",
+    "name": "ript",
+    "bytes": 782448,
+    "path": "public/station/ript.png",
+    "localSource": "D:/Dev/Belacorepo/110-pocketv2/frontend/public/Ripticon1024.png"
+  }
+]

@@ -1,0 +1,448 @@
+{
+  "data": {
+    "version": 1,
+    "address": "HBFn6VWPLNt44i8zqUoNs4mMtqyyxNTyWwQqfH5TBx8j",
+    "network": "mainnet-beta",
+    "generatedAt": "2026-10-21T02:01:01.064Z",
+    "wallet": {
+      "status": "unavailable",
+      "checkedAt": "2026-10-21T02:01:01.064Z",
+      "lastSuccessAt": null,
+      "data": null,
+      "message": "Source unavailable; retrying automatically. Displayed values are from the last successful sync."
+    },
+    "platforms": [
+      {
+        "id": 1,
+        "strategyKey": "jupiter-spot-hold",
+        "provider": "Jupiter Swap",
+        "source": "https://api.jup.ag/swap/v1/quote",
+        "observation": {
+          "status": "ready",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "ready",
+            "valueUsd": "9.979536340846",
+            "positionCount": 1,
+            "performance": {
+              "stationId": 1,
+              "allocationUsd": "10",
+              "entryCostUsdc": "10.000000",
+              "equityUsd": "9.979536340846",
+              "pnlUsd": "-0.020463659154",
+              "pnlPct": "-0.20463659",
+              "solAmount": "0.093680067",
+              "cashUsdc": "0.000000",
+              "entryAt": "2026-10-21T00:55:01.000Z",
+              "entrySignature": "2vFhUtHSXHX3Pg5hRgtMhoVasLAnZCFJZ5SLoXxSoUtfWPjNtH1q3wMQD4PNcjRv5aTHPoMhWneVinZCjXrJaUgA",
+              "executionEnabled": false,
+              "history": [
+                {
+                  "at": "2026-10-21T02:01:01.064Z",
+                  "valueUsd": "9.979536340846"
+                }
+              ]
+            },
+            "executionEnabled": false,
+            "connection": {
+              "scope": "positions",
+              "detail": "Finalized entry attribution + read-only mainnet mark"
+            },
+            "detail": "0.093680067 SOL · 30-day hold · execution off"
+          },
+          "message": "0.093680067 SOL · 30-day hold · execution off"
+        }
+      },
+      {
+        "id": 2,
+        "strategyKey": "raydium-active-spot",
+        "provider": "Raydium",
+        "source": "https://transaction-v1.raydium.io/compute/swap-base-in",
+        "observation": {
+          "status": "needs_setup",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "needs_setup",
+            "valueUsd": null,
+            "positionCount": null,
+            "connection": {
+              "scope": "quotes",
+              "detail": "Live SOL/USDC quote probe · no transaction built"
+            },
+            "detail": "Quote API connected · choose trading tokens and attribution rules",
+            "executionEnabled": false
+          },
+          "message": "Quote API connected · choose trading tokens and attribution rules"
+        }
+      },
+      {
+        "id": 3,
+        "strategyKey": "jupiter-perps-long",
+        "provider": "Jupiter Perps",
+        "source": "https://perps-api.jup.ag/v1/positions",
+        "observation": {
+          "status": "empty",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "empty",
+            "positionCount": 0,
+            "valueUsd": "0",
+            "detail": "No open Jupiter long positions",
+            "connection": {
+              "scope": "positions",
+              "detail": "Public Jupiter Perps positions · longs only"
+            },
+            "executionEnabled": false
+          },
+          "message": "No open Jupiter long positions"
+        }
+      },
+      {
+        "id": 4,
+        "strategyKey": "pacifica-short",
+        "provider": "Pacifica",
+        "source": "https://api.pacifica.fi/api/v1/positions",
+        "observation": {
+          "status": "empty",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "empty",
+            "valueUsd": null,
+            "positionCount": 0,
+            "detail": "No open positions · no account data available",
+            "connection": {
+              "scope": "positions",
+              "detail": "Pacifica position reader · account creation/deposit pending"
+            },
+            "executionEnabled": false
+          },
+          "message": "No open positions · no account data available"
+        }
+      },
+      {
+        "id": 5,
+        "strategyKey": "meteora-liquidity",
+        "provider": "Meteora",
+        "source": "https://dlmm.datapi.meteora.ag/portfolio/open",
+        "observation": {
+          "status": "empty",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "empty",
+            "valueUsd": "0",
+            "positionCount": 0,
+            "detail": "No open DLMM positions",
+            "connection": {
+              "scope": "portfolio",
+              "detail": "DLMM balances and unclaimed fees"
+            },
+            "executionEnabled": false
+          },
+          "message": "No open DLMM positions"
+        }
+      },
+      {
+        "id": 6,
+        "strategyKey": "kamino-usdc-lending",
+        "provider": "Kamino",
+        "source": "https://github.com/Kamino-Finance/klend-sdk",
+        "observation": {
+          "status": "ready",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "ready",
+            "valueUsd": "10.000000",
+            "positionCount": 1,
+            "executionEnabled": false,
+            "detail": "USDC lending · receipt-token value · fee pool excluded · execution off",
+            "connection": {
+              "scope": "program_accounts",
+              "detail": "Direct USDC receipt tokens · on-chain reserve exchange rate · USDC=$1"
+            },
+            "lending": {
+              "state": "active",
+              "plannedUsdc": "10.000000",
+              "reserve": "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp",
+              "collateralMint": "32XLsweyeQwWgLKRVAzS72nxHGU1JmmNQQZ3C3q6fBjJ",
+              "receiptAccount": "Ezb8iGvPbVKFN2tF6wrRermeo47qDXTWXQWMiUYLeAYx",
+              "receiptAtoms": "8295955",
+              "redeemableUsdc": "10.000000",
+              "pnlUsd": "0.000000",
+              "supplyApy": "0.045675591204064725",
+              "slot": 459454801,
+              "accruedAt": "2026-10-21T01:59:36.000Z",
+              "preparation": {
+                "simulatedAt": "2026-10-21T01:41:55.174Z",
+                "depositUsdc": "10.000000",
+                "rentSol": "0.001488440",
+                "entryFeeSol": "0.000005000",
+                "entryMessageHash": "9b84f04d0321d26c2cc760d0f5d0a9b5a5fcf2a8a95c687edbe822cb7d514f7f",
+                "roundTripMessageHash": "d2ee41a8e59a78d5725e3a4b3847eff27d878eaa6c2ec49312ee77a89dca38ba",
+                "expectedReceiptAtoms": "8295967",
+                "roundTripRoundingLossUsdc": "0.000001",
+                "signed": false,
+                "submitted": false
+              },
+              "history": [
+                {
+                  "at": "2026-10-21T02:01:01.064Z",
+                  "valueUsd": "10.000000"
+                }
+              ],
+              "entry": {
+                "signature": "2Z3TQQy8ApF5K2jPit5G569C4recEXMRwVF2fPC55DGWnTXaZpYpRdpwH9TvCm8GwxRGVTsgoaG8xFPUjzdrQ9x5",
+                "at": "2026-10-21T01:58:50.000Z",
+                "spentUsdc": "10.000000",
+                "accountRentSol": "0.001488440",
+                "networkFeeSol": "0.000005400"
+              }
+            },
+            "performance": {
+              "stationId": 6,
+              "allocationUsd": "10",
+              "entryCostUsdc": "10.000000",
+              "equityUsd": "10.000000000000",
+              "pnlUsd": "0.000000000000",
+              "pnlPct": "0.00000000",
+              "solAmount": "0.000000000",
+              "cashUsdc": "0.000000",
+              "entryAt": "2026-10-21T01:58:50.000Z",
+              "entrySignature": "2Z3TQQy8ApF5K2jPit5G569C4recEXMRwVF2fPC55DGWnTXaZpYpRdpwH9TvCm8GwxRGVTsgoaG8xFPUjzdrQ9x5",
+              "executionEnabled": false,
+              "history": [
+                {
+                  "at": "2026-10-21T02:01:01.064Z",
+                  "valueUsd": "10.000000000000"
+                }
+              ]
+            }
+          },
+          "message": "USDC lending · receipt-token value · fee pool excluded · execution off"
+        }
+      },
+      {
+        "id": 7,
+        "strategyKey": "pump-existing-memecoin",
+        "provider": "Pump.fun",
+        "source": "https://github.com/pump-fun/pump-public-docs",
+        "observation": {
+          "status": "unavailable",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": null,
+          "data": null,
+          "message": "Source unavailable; retrying automatically. Displayed values are from the last successful sync."
+        }
+      },
+      {
+        "id": 8,
+        "strategyKey": "orca-concentrated-liquidity",
+        "provider": "Orca",
+        "source": "https://docs.orca.so/developers/sdks/positions/monitor-positions",
+        "observation": {
+          "status": "ready",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+          "data": {
+            "status": "ready",
+            "valueUsd": "9.993525919855",
+            "positionCount": 1,
+            "performance": {
+              "stationId": 8,
+              "allocationUsd": "10",
+              "entryCostUsdc": "9.922452",
+              "equityUsd": "9.993525919855",
+              "pnlUsd": "-0.006474080145",
+              "pnlPct": "-0.06474080",
+              "solAmount": "0.042524418",
+              "cashUsdc": "0.077548",
+              "entryAt": "2026-10-21T00:55:39.000Z",
+              "entrySignature": "4og1j7QYep3KZEG7aSGjbpwoR6D4cSygtc4GZM3PDn2bNokx36mHFcAYGqDuC96uJ9f887ZcV2y6apZ25efuan2R",
+              "executionEnabled": false,
+              "history": [
+                {
+                  "at": "2026-10-21T02:01:01.064Z",
+                  "valueUsd": "9.993525919855"
+                }
+              ],
+              "principalSol": "0.042313087",
+              "principalUsdc": "5.385777",
+              "residualSol": "0.000209636",
+              "accruedFeesSol": "0.000001695",
+              "accruedFeesUsdc": "0.000166",
+              "accruedFeesUsd": "0.000346564710",
+              "positionAddress": "GmCZFFr96WxLefnXa93HyJ8UeSaYMsgkkYLcJwg7o7aL",
+              "lowerPrice": "85.34299147706263",
+              "upperPrice": "128.02916021206252",
+              "inRange": true
+            },
+            "executionEnabled": false,
+            "connection": {
+              "scope": "positions",
+              "detail": "Finalized entry attribution + read-only mainnet mark"
+            },
+            "positions": [
+              {
+                "address": "GmCZFFr96WxLefnXa93HyJ8UeSaYMsgkkYLcJwg7o7aL",
+                "pool": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+                "liquidity": "157245224",
+                "lowerTick": -24612,
+                "upperTick": -20556
+              }
+            ],
+            "detail": "SOL/USDC · in range · fees included · execution off"
+          },
+          "message": "SOL/USDC · in range · fees included · execution off"
+        }
+      },
+      {
+        "id": 9,
+        "strategyKey": "ript-weekly-pack",
+        "provider": "Ript",
+        "source": "https://ript.fun",
+        "observation": {
+          "status": "pending",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": null,
+          "data": {
+            "status": "pending",
+            "detail": "Pending · owner is building a custom challenge pack",
+            "valueUsd": null,
+            "positionCount": null,
+            "executionEnabled": false
+          },
+          "message": "Pending · owner is building a custom challenge pack"
+        }
+      },
+      {
+        "id": 10,
+        "strategyKey": "pump-own-launch",
+        "provider": "Pump.fun",
+        "source": "https://github.com/pump-fun/pump-public-docs",
+        "observation": {
+          "status": "unavailable",
+          "checkedAt": "2026-10-21T02:01:01.064Z",
+          "lastSuccessAt": null,
+          "data": null,
+          "message": "Source unavailable; retrying automatically. Displayed values are from the last successful sync."
+        }
+      }
+    ],
+    "accounting": {
+      "status": "ready",
+      "checkedAt": "2026-10-21T02:01:01.064Z",
+      "lastSuccessAt": "2026-10-21T02:01:01.064Z",
+      "data": {
+        "wallet": "HBFn6VWPLNt44i8zqUoNs4mMtqyyxNTyWwQqfH5TBx8j",
+        "slot": 459454806,
+        "observedAt": "2026-10-21T02:01:01.064Z",
+        "solPriceUsd": "106.527852300169",
+        "equityUsd": "99.973062260701",
+        "pnlUsd": "-0.026937739299",
+        "pnlPct": "-0.02693774",
+        "allocatedUsd": "30.000000",
+        "unallocatedUsdc": "70.000000",
+        "surplusUsdc": "0.000100",
+        "unattributedSol": "0.000000000",
+        "unattributedUsdc": "0.000000",
+        "strategies": [
+          {
+            "stationId": 1,
+            "allocationUsd": "10",
+            "entryCostUsdc": "10.000000",
+            "equityUsd": "9.979536340846",
+            "pnlUsd": "-0.020463659154",
+            "pnlPct": "-0.20463659",
+            "solAmount": "0.093680067",
+            "cashUsdc": "0.000000",
+            "entryAt": "2026-10-21T00:55:01.000Z",
+            "entrySignature": "2vFhUtHSXHX3Pg5hRgtMhoVasLAnZCFJZ5SLoXxSoUtfWPjNtH1q3wMQD4PNcjRv5aTHPoMhWneVinZCjXrJaUgA",
+            "executionEnabled": false,
+            "history": [
+              {
+                "at": "2026-10-21T02:01:01.064Z",
+                "valueUsd": "9.979536340846"
+              }
+            ]
+          },
+          {
+            "stationId": 8,
+            "allocationUsd": "10",
+            "entryCostUsdc": "9.922452",
+            "equityUsd": "9.993525919855",
+            "pnlUsd": "-0.006474080145",
+            "pnlPct": "-0.06474080",
+            "solAmount": "0.042524418",
+            "cashUsdc": "0.077548",
+            "entryAt": "2026-10-21T00:55:39.000Z",
+            "entrySignature": "4og1j7QYep3KZEG7aSGjbpwoR6D4cSygtc4GZM3PDn2bNokx36mHFcAYGqDuC96uJ9f887ZcV2y6apZ25efuan2R",
+            "executionEnabled": false,
+            "history": [
+              {
+                "at": "2026-10-21T02:01:01.064Z",
+                "valueUsd": "9.993525919855"
+              }
+            ],
+            "principalSol": "0.042313087",
+            "principalUsdc": "5.385777",
+            "residualSol": "0.000209636",
+            "accruedFeesSol": "0.000001695",
+            "accruedFeesUsdc": "0.000166",
+            "accruedFeesUsd": "0.000346564710",
+            "positionAddress": "GmCZFFr96WxLefnXa93HyJ8UeSaYMsgkkYLcJwg7o7aL",
+            "lowerPrice": "85.34299147706263",
+            "upperPrice": "128.02916021206252",
+            "inRange": true
+          },
+          {
+            "stationId": 6,
+            "allocationUsd": "10",
+            "entryCostUsdc": "10.000000",
+            "equityUsd": "10.000000000000",
+            "pnlUsd": "0.000000000000",
+            "pnlPct": "0.00000000",
+            "solAmount": "0.000000000",
+            "cashUsdc": "0.000000",
+            "entryAt": "2026-10-21T01:58:50.000Z",
+            "entrySignature": "2Z3TQQy8ApF5K2jPit5G569C4recEXMRwVF2fPC55DGWnTXaZpYpRdpwH9TvCm8GwxRGVTsgoaG8xFPUjzdrQ9x5",
+            "executionEnabled": false,
+            "history": [
+              {
+                "at": "2026-10-21T02:01:01.064Z",
+                "valueUsd": "10.000000000000"
+              }
+            ]
+          }
+        ],
+        "feePool": {
+          "availableSol": "0.019859400",
+          "valueUsd": "2.115579229970",
+          "accountCapitalSol": "0.010120400",
+          "networkFeesSol": "0.000021200",
+          "senderFundedAccountCapitalSol": "0.001488440"
+        },
+        "valuationBasis": "SOL/USDC pool mark; USDC=$1. LP principal + accrued swap fees + residual cash/tokens; confirmed Kamino receipt tokens at last accrued reserve rate when present. Operating fees, rent capital and future exit costs excluded from strategy P&L.",
+        "disabledStations": [
+          2,
+          3,
+          4,
+          5,
+          7,
+          9,
+          10
+        ]
+      },
+      "message": "Read-only sync connected"
+    }
+  },
+  "meta": {
+    "stale": false,
+    "pollAfterMs": 30000,
+    "requestId": "local-read-only-activation-verification"
+  }
+}

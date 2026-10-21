@@ -1,0 +1,12 @@
+{
+  "simulatedAt": "2026-10-21T01:41:55.174Z",
+  "depositUsdc": "10.000000",
+  "rentSol": "0.001488440",
+  "entryFeeSol": "0.000005000",
+  "entryMessageHash": "9b84f04d0321d26c2cc760d0f5d0a9b5a5fcf2a8a95c687edbe822cb7d514f7f",
+  "roundTripMessageHash": "d2ee41a8e59a78d5725e3a4b3847eff27d878eaa6c2ec49312ee77a89dca38ba",
+  "expectedReceiptAtoms": "8295967",
+  "roundTripRoundingLossUsdc": "0.000001",
+  "signed": false,
+  "submitted": false
+}

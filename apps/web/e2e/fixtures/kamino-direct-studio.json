@@ -1,0 +1,955 @@
+{
+  "data": {
+    "wallet": {
+      "data": {
+        "sol": "0.115033307",
+        "slot": 459450213,
+        "tokens": [
+          {
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "amount": "80.077648"
+          },
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "amount": "0.000209636"
+          },
+          {
+            "mint": "8pN95gNGgAcRpGF3EnNR8RwDYkH9jxozDebgo2G4bkom",
+            "amount": "1"
+          }
+        ],
+        "valueUsd": null,
+        "unpricedAssets": 1,
+        "recentTransactions": [
+          {
+            "failed": false,
+            "blockTime": 1792544139,
+            "signature": "4og1j7QYep3KZEG7aSGjbpwoR6D4cSygtc4GZM3PDn2bNokx36mHFcAYGqDuC96uJ9f887ZcV2y6apZ25efuan2R"
+          },
+          {
+            "failed": false,
+            "blockTime": 1792544101,
+            "signature": "2vFhUtHSXHX3Pg5hRgtMhoVasLAnZCFJZ5SLoXxSoUtfWPjNtH1q3wMQD4PNcjRv5aTHPoMhWneVinZCjXrJaUgA"
+          },
+          {
+            "failed": false,
+            "blockTime": 1792542775,
+            "signature": "6PwSXrxi3ZsRMtcxQaJWdMNm4s1gZBqJ47XgyBj77mLyVPeHjMSdYjsvtywR4LLiLR5WBMfAAiPPeoim8JBbhvW"
+          },
+          {
+            "failed": false,
+            "blockTime": 1792542529,
+            "signature": "38Ghr3FCfPE8wpkytwfdwz5z6UyNSCwEJSPxtDfR2RZbWzAohaEoz1CtTZT52NGTVMapLjHGqxDTibeL3UwhhaAZ"
+          },
+          {
+            "failed": false,
+            "blockTime": 1792542522,
+            "signature": "5o5timUqWiTa9bB9awfY8ysu9auVAFa1p9mwU1QmVbUzZdjNdkAbbTFh1wuju9E5kDYMq3o4mzDyz5Rg4Sey3WKv"
+          },
+          {
+            "failed": false,
+            "blockTime": 1792542475,
+            "signature": "3mJLYUyiyTN4GyFxo63etMnzB7w8De47mYtgiVJFYuCeSLf34qRQJJGQ9YgQrThLDPYkfVMX79FzoBqbHhvKu2oR"
+          },
+          {
+            "failed": false,
+            "blockTime": 1792542459,
+            "signature": "2DgL1EQkGV8UBRcHLaS5JUse8a8exc4ucqLHmesKTaGcBbYynnr4TC7E5dX4dvnRPLc6FUS15C99aMfazSw54Rib"
+          }
+        ]
+      },
+      "status": "ready",
+      "message": "Read-only sync connected",
+      "checkedAt": "2026-10-21T01:44:32.674Z",
+      "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+    },
+    "address": "HBFn6VWPLNt44i8zqUoNs4mMtqyyxNTyWwQqfH5TBx8j",
+    "network": "mainnet-beta",
+    "version": 1,
+    "platforms": [
+      {
+        "id": 1,
+        "source": "https://api.jup.ag/swap/v1/quote",
+        "provider": "Jupiter Swap",
+        "observation": {
+          "data": {
+            "detail": "0.093680067 SOL · 30-day hold · execution off",
+            "status": "ready",
+            "valueUsd": "9.982421348596",
+            "connection": {
+              "scope": "positions",
+              "detail": "Finalized entry attribution + read-only mainnet mark"
+            },
+            "performance": {
+              "pnlPct": "-0.17578651",
+              "pnlUsd": "-0.017578651404",
+              "entryAt": "2026-10-21T00:55:01.000Z",
+              "history": [
+                {
+                  "at": "2026-10-21T01:13:52.891Z",
+                  "valueUsd": "9.962798775009"
+                },
+                {
+                  "at": "2026-10-21T01:14:54.846Z",
+                  "valueUsd": "9.963147219833"
+                },
+                {
+                  "at": "2026-10-21T01:15:56.044Z",
+                  "valueUsd": "9.959380232976"
+                },
+                {
+                  "at": "2026-10-21T01:16:57.187Z",
+                  "valueUsd": "9.956365893117"
+                },
+                {
+                  "at": "2026-10-21T01:17:58.297Z",
+                  "valueUsd": "9.957708644175"
+                },
+                {
+                  "at": "2026-10-21T01:18:59.405Z",
+                  "valueUsd": "9.957241305058"
+                },
+                {
+                  "at": "2026-10-21T01:20:00.568Z",
+                  "valueUsd": "9.964271321599"
+                },
+                {
+                  "at": "2026-10-21T01:21:01.680Z",
+                  "valueUsd": "9.958318971657"
+                },
+                {
+                  "at": "2026-10-21T01:22:02.825Z",
+                  "valueUsd": "9.958942358739"
+                },
+                {
+                  "at": "2026-10-21T01:23:04.036Z",
+                  "valueUsd": "9.964222647287"
+                },
+                {
+                  "at": "2026-10-21T01:24:05.241Z",
+                  "valueUsd": "9.975980827033"
+                },
+                {
+                  "at": "2026-10-21T01:25:06.379Z",
+                  "valueUsd": "9.971802216174"
+                },
+                {
+                  "at": "2026-10-21T01:26:07.594Z",
+                  "valueUsd": "9.971651403940"
+                },
+                {
+                  "at": "2026-10-21T01:27:08.720Z",
+                  "valueUsd": "9.974986556972"
+                },
+                {
+                  "at": "2026-10-21T01:28:09.850Z",
+                  "valueUsd": "9.984743753443"
+                },
+                {
+                  "at": "2026-10-21T01:29:11.035Z",
+                  "valueUsd": "9.990100849507"
+                },
+                {
+                  "at": "2026-10-21T01:30:12.356Z",
+                  "valueUsd": "9.980215071487"
+                },
+                {
+                  "at": "2026-10-21T01:31:13.566Z",
+                  "valueUsd": "9.984217130789"
+                },
+                {
+                  "at": "2026-10-21T01:32:14.695Z",
+                  "valueUsd": "9.979594699340"
+                },
+                {
+                  "at": "2026-10-21T01:33:15.835Z",
+                  "valueUsd": "9.977452962581"
+                },
+                {
+                  "at": "2026-10-21T01:34:17.088Z",
+                  "valueUsd": "9.979731447379"
+                },
+                {
+                  "at": "2026-10-21T01:35:21.165Z",
+                  "valueUsd": "9.988627094512"
+                },
+                {
+                  "at": "2026-10-21T01:36:22.704Z",
+                  "valueUsd": "9.985908748404"
+                },
+                {
+                  "at": "2026-10-21T01:37:23.839Z",
+                  "valueUsd": "9.969651444883"
+                },
+                {
+                  "at": "2026-10-21T01:38:25.007Z",
+                  "valueUsd": "9.969744231161"
+                },
+                {
+                  "at": "2026-10-21T01:39:26.137Z",
+                  "valueUsd": "9.971839084833"
+                },
+                {
+                  "at": "2026-10-21T01:40:27.368Z",
+                  "valueUsd": "9.972322147054"
+                },
+                {
+                  "at": "2026-10-21T01:41:28.527Z",
+                  "valueUsd": "9.972986470278"
+                },
+                {
+                  "at": "2026-10-21T01:42:30.280Z",
+                  "valueUsd": "9.968987463310"
+                },
+                {
+                  "at": "2026-10-21T01:43:31.530Z",
+                  "valueUsd": "9.970433142868"
+                },
+                {
+                  "at": "2026-10-21T01:44:32.674Z",
+                  "valueUsd": "9.982421348596"
+                }
+              ],
+              "cashUsdc": "0.000000",
+              "equityUsd": "9.982421348596",
+              "solAmount": "0.093680067",
+              "stationId": 1,
+              "allocationUsd": "10",
+              "entryCostUsdc": "10.000000",
+              "entrySignature": "2vFhUtHSXHX3Pg5hRgtMhoVasLAnZCFJZ5SLoXxSoUtfWPjNtH1q3wMQD4PNcjRv5aTHPoMhWneVinZCjXrJaUgA",
+              "executionEnabled": false
+            },
+            "positionCount": 1,
+            "executionEnabled": false
+          },
+          "status": "ready",
+          "message": "0.093680067 SOL · 30-day hold · execution off",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "jupiter-spot-hold"
+      },
+      {
+        "id": 2,
+        "source": "https://transaction-v1.raydium.io/compute/swap-base-in",
+        "provider": "Raydium",
+        "observation": {
+          "data": {
+            "detail": "Quote API connected · choose trading tokens and attribution rules",
+            "status": "needs_setup",
+            "valueUsd": null,
+            "connection": {
+              "scope": "quotes",
+              "detail": "Live SOL/USDC quote probe · no transaction built"
+            },
+            "positionCount": null,
+            "executionEnabled": false
+          },
+          "status": "needs_setup",
+          "message": "Quote API connected · choose trading tokens and attribution rules",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "raydium-active-spot"
+      },
+      {
+        "id": 3,
+        "source": "https://perps-api.jup.ag/v1/positions",
+        "provider": "Jupiter Perps",
+        "observation": {
+          "data": {
+            "detail": "No open Jupiter long positions",
+            "status": "empty",
+            "valueUsd": "0",
+            "connection": {
+              "scope": "positions",
+              "detail": "Public Jupiter Perps positions · longs only"
+            },
+            "positionCount": 0,
+            "executionEnabled": false
+          },
+          "status": "empty",
+          "message": "No open Jupiter long positions",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "jupiter-perps-long"
+      },
+      {
+        "id": 4,
+        "source": "https://api.pacifica.fi/api/v1/positions",
+        "provider": "Pacifica",
+        "observation": {
+          "data": {
+            "detail": "No open positions · no account data available",
+            "status": "empty",
+            "valueUsd": null,
+            "connection": {
+              "scope": "positions",
+              "detail": "Pacifica position reader · account creation/deposit pending"
+            },
+            "positionCount": 0,
+            "executionEnabled": false
+          },
+          "status": "empty",
+          "message": "No open positions · no account data available",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "pacifica-short"
+      },
+      {
+        "id": 5,
+        "source": "https://dlmm.datapi.meteora.ag/portfolio/open",
+        "provider": "Meteora",
+        "observation": {
+          "data": {
+            "detail": "No open DLMM positions",
+            "status": "empty",
+            "valueUsd": "0",
+            "connection": {
+              "scope": "portfolio",
+              "detail": "DLMM balances and unclaimed fees"
+            },
+            "positionCount": 0,
+            "executionEnabled": false
+          },
+          "status": "empty",
+          "message": "No open DLMM positions",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "meteora-liquidity"
+      },
+      {
+        "id": 6,
+        "source": "https://api.kamino.finance/portfolio",
+        "provider": "Kamino",
+        "observation": {
+          "status": "needs_setup",
+          "checkedAt": "2026-10-21T01:45:18.414Z",
+          "lastSuccessAt": "2026-10-21T01:45:18.414Z",
+          "data": {
+            "status": "needs_setup",
+            "valueUsd": "0.000000",
+            "positionCount": 0,
+            "executionEnabled": false,
+            "detail": "Prepared: up to 10 USDC direct lending · awaiting review · execution off",
+            "connection": {
+              "scope": "program_accounts",
+              "detail": "Direct USDC receipt tokens · on-chain reserve exchange rate · USDC=$1"
+            },
+            "lending": {
+              "state": "prepared",
+              "plannedUsdc": "10.000000",
+              "reserve": "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp",
+              "collateralMint": "32XLsweyeQwWgLKRVAzS72nxHGU1JmmNQQZ3C3q6fBjJ",
+              "receiptAccount": "Ezb8iGvPbVKFN2tF6wrRermeo47qDXTWXQWMiUYLeAYx",
+              "receiptAtoms": "0",
+              "redeemableUsdc": "0.000000",
+              "pnlUsd": null,
+              "supplyApy": "0.04567551798169367",
+              "slot": 459450424,
+              "accruedAt": "2026-10-21T01:44:37.000Z",
+              "preparation": {
+                "simulatedAt": "2026-10-21T01:41:55.174Z",
+                "depositUsdc": "10.000000",
+                "rentSol": "0.001488440",
+                "entryFeeSol": "0.000005000",
+                "entryMessageHash": "9b84f04d0321d26c2cc760d0f5d0a9b5a5fcf2a8a95c687edbe822cb7d514f7f",
+                "roundTripMessageHash": "d2ee41a8e59a78d5725e3a4b3847eff27d878eaa6c2ec49312ee77a89dca38ba",
+                "expectedReceiptAtoms": "8295967",
+                "roundTripRoundingLossUsdc": "0.000001",
+                "signed": false,
+                "submitted": false
+              },
+              "history": []
+            }
+          },
+          "message": "Prepared: up to 10 USDC direct lending · awaiting review · execution off"
+        },
+        "strategyKey": "kamino-usdc-lending"
+      },
+      {
+        "id": 7,
+        "source": "https://github.com/pump-fun/pump-public-docs",
+        "provider": "Pump.fun",
+        "observation": {
+          "data": {
+            "detail": "Chain reader connected · choose existing coin and attribute its trades",
+            "status": "needs_setup",
+            "valueUsd": null,
+            "connection": {
+              "scope": "program_accounts",
+              "detail": "Pump and PumpSwap programs verified on mainnet · wallet token reader connected"
+            },
+            "positionCount": null,
+            "executionEnabled": false
+          },
+          "status": "needs_setup",
+          "message": "Chain reader connected · choose existing coin and attribute its trades",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "pump-existing-memecoin"
+      },
+      {
+        "id": 8,
+        "source": "https://docs.orca.so/developers/sdks/positions/monitor-positions",
+        "provider": "Orca",
+        "observation": {
+          "data": {
+            "detail": "SOL/USDC · in range · fees included · execution off",
+            "status": "ready",
+            "valueUsd": "9.994752175218",
+            "positions": [
+              {
+                "pool": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+                "address": "GmCZFFr96WxLefnXa93HyJ8UeSaYMsgkkYLcJwg7o7aL",
+                "liquidity": "157245224",
+                "lowerTick": -24612,
+                "upperTick": -20556
+              }
+            ],
+            "connection": {
+              "scope": "positions",
+              "detail": "Finalized entry attribution + read-only mainnet mark"
+            },
+            "performance": {
+              "pnlPct": "-0.05247825",
+              "pnlUsd": "-0.005247824782",
+              "entryAt": "2026-10-21T00:55:39.000Z",
+              "history": [
+                {
+                  "at": "2026-10-21T01:13:52.891Z",
+                  "valueUsd": "9.985663857582"
+                },
+                {
+                  "at": "2026-10-21T01:14:54.846Z",
+                  "valueUsd": "9.985824761210"
+                },
+                {
+                  "at": "2026-10-21T01:15:56.044Z",
+                  "valueUsd": "9.984105461500"
+                },
+                {
+                  "at": "2026-10-21T01:16:57.187Z",
+                  "valueUsd": "9.982722534767"
+                },
+                {
+                  "at": "2026-10-21T01:17:58.297Z",
+                  "valueUsd": "9.983346700384"
+                },
+                {
+                  "at": "2026-10-21T01:18:59.405Z",
+                  "valueUsd": "9.983132451800"
+                },
+                {
+                  "at": "2026-10-21T01:20:00.568Z",
+                  "valueUsd": "9.986365406709"
+                },
+                {
+                  "at": "2026-10-21T01:21:01.680Z",
+                  "valueUsd": "9.983640743097"
+                },
+                {
+                  "at": "2026-10-21T01:22:02.825Z",
+                  "valueUsd": "9.983932426987"
+                },
+                {
+                  "at": "2026-10-21T01:23:04.036Z",
+                  "valueUsd": "9.986359288858"
+                },
+                {
+                  "at": "2026-10-21T01:24:05.241Z",
+                  "valueUsd": "9.991736070872"
+                },
+                {
+                  "at": "2026-10-21T01:25:06.379Z",
+                  "valueUsd": "9.989836955089"
+                },
+                {
+                  "at": "2026-10-21T01:26:07.594Z",
+                  "valueUsd": "9.989768184276"
+                },
+                {
+                  "at": "2026-10-21T01:27:08.720Z",
+                  "valueUsd": "9.991290876647"
+                },
+                {
+                  "at": "2026-10-21T01:28:09.850Z",
+                  "valueUsd": "9.995727881084"
+                },
+                {
+                  "at": "2026-10-21T01:29:11.035Z",
+                  "valueUsd": "9.998156414665"
+                },
+                {
+                  "at": "2026-10-21T01:30:12.356Z",
+                  "valueUsd": "9.993692594274"
+                },
+                {
+                  "at": "2026-10-21T01:31:13.566Z",
+                  "valueUsd": "9.995510056449"
+                },
+                {
+                  "at": "2026-10-21T01:32:14.695Z",
+                  "valueUsd": "9.993418518691"
+                },
+                {
+                  "at": "2026-10-21T01:33:15.835Z",
+                  "valueUsd": "9.992448364356"
+                },
+                {
+                  "at": "2026-10-21T01:34:17.088Z",
+                  "valueUsd": "9.993485278428"
+                },
+                {
+                  "at": "2026-10-21T01:35:21.165Z",
+                  "valueUsd": "9.997520759857"
+                },
+                {
+                  "at": "2026-10-21T01:36:22.704Z",
+                  "valueUsd": "9.996294940474"
+                },
+                {
+                  "at": "2026-10-21T01:37:23.839Z",
+                  "valueUsd": "9.988922118832"
+                },
+                {
+                  "at": "2026-10-21T01:38:25.007Z",
+                  "valueUsd": "9.988965872497"
+                },
+                {
+                  "at": "2026-10-21T01:39:26.137Z",
+                  "valueUsd": "9.989924154596"
+                },
+                {
+                  "at": "2026-10-21T01:40:27.368Z",
+                  "valueUsd": "9.990144681413"
+                },
+                {
+                  "at": "2026-10-21T01:41:28.527Z",
+                  "valueUsd": "9.990449141213"
+                },
+                {
+                  "at": "2026-10-21T01:42:30.280Z",
+                  "valueUsd": "9.988629099458"
+                },
+                {
+                  "at": "2026-10-21T01:43:31.530Z",
+                  "valueUsd": "9.989289833764"
+                },
+                {
+                  "at": "2026-10-21T01:44:32.674Z",
+                  "valueUsd": "9.994752175218"
+                }
+              ],
+              "inRange": true,
+              "cashUsdc": "0.077548",
+              "equityUsd": "9.994752175218",
+              "solAmount": "0.042454397",
+              "stationId": 8,
+              "lowerPrice": "85.34299147706263",
+              "upperPrice": "128.02916021206252",
+              "residualSol": "0.000209636",
+              "principalSol": "0.042243463",
+              "allocationUsd": "10",
+              "entryCostUsdc": "9.922452",
+              "principalUsdc": "5.393195",
+              "accruedFeesSol": "0.000001298",
+              "accruedFeesUsd": "0.000264313126",
+              "entrySignature": "4og1j7QYep3KZEG7aSGjbpwoR6D4cSygtc4GZM3PDn2bNokx36mHFcAYGqDuC96uJ9f887ZcV2y6apZ25efuan2R",
+              "accruedFeesUsdc": "0.000126",
+              "positionAddress": "GmCZFFr96WxLefnXa93HyJ8UeSaYMsgkkYLcJwg7o7aL",
+              "executionEnabled": false
+            },
+            "positionCount": 1,
+            "executionEnabled": false
+          },
+          "status": "ready",
+          "message": "SOL/USDC · in range · fees included · execution off",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "orca-concentrated-liquidity"
+      },
+      {
+        "id": 9,
+        "source": "https://ript.fun",
+        "provider": "Ript",
+        "observation": {
+          "data": {
+            "detail": "Pending · owner is building a custom challenge pack",
+            "status": "pending",
+            "valueUsd": null,
+            "positionCount": null,
+            "executionEnabled": false
+          },
+          "status": "pending",
+          "message": "Pending · owner is building a custom challenge pack",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": null
+        },
+        "strategyKey": "ript-weekly-pack"
+      },
+      {
+        "id": 10,
+        "source": "https://github.com/pump-fun/pump-public-docs",
+        "provider": "Pump.fun",
+        "observation": {
+          "data": {
+            "detail": "Chain reader connected · choose launch metadata and budget · execution disabled",
+            "status": "needs_setup",
+            "valueUsd": null,
+            "connection": {
+              "scope": "program_accounts",
+              "detail": "Pump and PumpSwap programs verified on mainnet · wallet token reader connected"
+            },
+            "positionCount": null,
+            "executionEnabled": false
+          },
+          "status": "needs_setup",
+          "message": "Chain reader connected · choose launch metadata and budget · execution disabled",
+          "checkedAt": "2026-10-21T01:44:32.674Z",
+          "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+        },
+        "strategyKey": "pump-own-launch"
+      }
+    ],
+    "accounting": {
+      "data": {
+        "slot": 459450216,
+        "pnlPct": "-0.02282648",
+        "pnlUsd": "-0.022826476186",
+        "wallet": "HBFn6VWPLNt44i8zqUoNs4mMtqyyxNTyWwQqfH5TBx8j",
+        "feePool": {
+          "valueUsd": "2.275372399528",
+          "availableSol": "0.021353240",
+          "networkFeesSol": "0.000015800",
+          "accountCapitalSol": "0.008631960",
+          "senderFundedAccountCapitalSol": "0.001488440"
+        },
+        "equityUsd": "99.977173523814",
+        "observedAt": "2026-10-21T01:44:32.674Z",
+        "strategies": [
+          {
+            "pnlPct": "-0.17578651",
+            "pnlUsd": "-0.017578651404",
+            "entryAt": "2026-10-21T00:55:01.000Z",
+            "history": [
+              {
+                "at": "2026-10-21T01:13:52.891Z",
+                "valueUsd": "9.962798775009"
+              },
+              {
+                "at": "2026-10-21T01:14:54.846Z",
+                "valueUsd": "9.963147219833"
+              },
+              {
+                "at": "2026-10-21T01:15:56.044Z",
+                "valueUsd": "9.959380232976"
+              },
+              {
+                "at": "2026-10-21T01:16:57.187Z",
+                "valueUsd": "9.956365893117"
+              },
+              {
+                "at": "2026-10-21T01:17:58.297Z",
+                "valueUsd": "9.957708644175"
+              },
+              {
+                "at": "2026-10-21T01:18:59.405Z",
+                "valueUsd": "9.957241305058"
+              },
+              {
+                "at": "2026-10-21T01:20:00.568Z",
+                "valueUsd": "9.964271321599"
+              },
+              {
+                "at": "2026-10-21T01:21:01.680Z",
+                "valueUsd": "9.958318971657"
+              },
+              {
+                "at": "2026-10-21T01:22:02.825Z",
+                "valueUsd": "9.958942358739"
+              },
+              {
+                "at": "2026-10-21T01:23:04.036Z",
+                "valueUsd": "9.964222647287"
+              },
+              {
+                "at": "2026-10-21T01:24:05.241Z",
+                "valueUsd": "9.975980827033"
+              },
+              {
+                "at": "2026-10-21T01:25:06.379Z",
+                "valueUsd": "9.971802216174"
+              },
+              {
+                "at": "2026-10-21T01:26:07.594Z",
+                "valueUsd": "9.971651403940"
+              },
+              {
+                "at": "2026-10-21T01:27:08.720Z",
+                "valueUsd": "9.974986556972"
+              },
+              {
+                "at": "2026-10-21T01:28:09.850Z",
+                "valueUsd": "9.984743753443"
+              },
+              {
+                "at": "2026-10-21T01:29:11.035Z",
+                "valueUsd": "9.990100849507"
+              },
+              {
+                "at": "2026-10-21T01:30:12.356Z",
+                "valueUsd": "9.980215071487"
+              },
+              {
+                "at": "2026-10-21T01:31:13.566Z",
+                "valueUsd": "9.984217130789"
+              },
+              {
+                "at": "2026-10-21T01:32:14.695Z",
+                "valueUsd": "9.979594699340"
+              },
+              {
+                "at": "2026-10-21T01:33:15.835Z",
+                "valueUsd": "9.977452962581"
+              },
+              {
+                "at": "2026-10-21T01:34:17.088Z",
+                "valueUsd": "9.979731447379"
+              },
+              {
+                "at": "2026-10-21T01:35:21.165Z",
+                "valueUsd": "9.988627094512"
+              },
+              {
+                "at": "2026-10-21T01:36:22.704Z",
+                "valueUsd": "9.985908748404"
+              },
+              {
+                "at": "2026-10-21T01:37:23.839Z",
+                "valueUsd": "9.969651444883"
+              },
+              {
+                "at": "2026-10-21T01:38:25.007Z",
+                "valueUsd": "9.969744231161"
+              },
+              {
+                "at": "2026-10-21T01:39:26.137Z",
+                "valueUsd": "9.971839084833"
+              },
+              {
+                "at": "2026-10-21T01:40:27.368Z",
+                "valueUsd": "9.972322147054"
+              },
+              {
+                "at": "2026-10-21T01:41:28.527Z",
+                "valueUsd": "9.972986470278"
+              },
+              {
+                "at": "2026-10-21T01:42:30.280Z",
+                "valueUsd": "9.968987463310"
+              },
+              {
+                "at": "2026-10-21T01:43:31.530Z",
+                "valueUsd": "9.970433142868"
+              },
+              {
+                "at": "2026-10-21T01:44:32.674Z",
+                "valueUsd": "9.982421348596"
+              }
+            ],
+            "cashUsdc": "0.000000",
+            "equityUsd": "9.982421348596",
+            "solAmount": "0.093680067",
+            "stationId": 1,
+            "allocationUsd": "10",
+            "entryCostUsdc": "10.000000",
+            "entrySignature": "2vFhUtHSXHX3Pg5hRgtMhoVasLAnZCFJZ5SLoXxSoUtfWPjNtH1q3wMQD4PNcjRv5aTHPoMhWneVinZCjXrJaUgA",
+            "executionEnabled": false
+          },
+          {
+            "pnlPct": "-0.05247825",
+            "pnlUsd": "-0.005247824782",
+            "entryAt": "2026-10-21T00:55:39.000Z",
+            "history": [
+              {
+                "at": "2026-10-21T01:13:52.891Z",
+                "valueUsd": "9.985663857582"
+              },
+              {
+                "at": "2026-10-21T01:14:54.846Z",
+                "valueUsd": "9.985824761210"
+              },
+              {
+                "at": "2026-10-21T01:15:56.044Z",
+                "valueUsd": "9.984105461500"
+              },
+              {
+                "at": "2026-10-21T01:16:57.187Z",
+                "valueUsd": "9.982722534767"
+              },
+              {
+                "at": "2026-10-21T01:17:58.297Z",
+                "valueUsd": "9.983346700384"
+              },
+              {
+                "at": "2026-10-21T01:18:59.405Z",
+                "valueUsd": "9.983132451800"
+              },
+              {
+                "at": "2026-10-21T01:20:00.568Z",
+                "valueUsd": "9.986365406709"
+              },
+              {
+                "at": "2026-10-21T01:21:01.680Z",
+                "valueUsd": "9.983640743097"
+              },
+              {
+                "at": "2026-10-21T01:22:02.825Z",
+                "valueUsd": "9.983932426987"
+              },
+              {
+                "at": "2026-10-21T01:23:04.036Z",
+                "valueUsd": "9.986359288858"
+              },
+              {
+                "at": "2026-10-21T01:24:05.241Z",
+                "valueUsd": "9.991736070872"
+              },
+              {
+                "at": "2026-10-21T01:25:06.379Z",
+                "valueUsd": "9.989836955089"
+              },
+              {
+                "at": "2026-10-21T01:26:07.594Z",
+                "valueUsd": "9.989768184276"
+              },
+              {
+                "at": "2026-10-21T01:27:08.720Z",
+                "valueUsd": "9.991290876647"
+              },
+              {
+                "at": "2026-10-21T01:28:09.850Z",
+                "valueUsd": "9.995727881084"
+              },
+              {
+                "at": "2026-10-21T01:29:11.035Z",
+                "valueUsd": "9.998156414665"
+              },
+              {
+                "at": "2026-10-21T01:30:12.356Z",
+                "valueUsd": "9.993692594274"
+              },
+              {
+                "at": "2026-10-21T01:31:13.566Z",
+                "valueUsd": "9.995510056449"
+              },
+              {
+                "at": "2026-10-21T01:32:14.695Z",
+                "valueUsd": "9.993418518691"
+              },
+              {
+                "at": "2026-10-21T01:33:15.835Z",
+                "valueUsd": "9.992448364356"
+              },
+              {
+                "at": "2026-10-21T01:34:17.088Z",
+                "valueUsd": "9.993485278428"
+              },
+              {
+                "at": "2026-10-21T01:35:21.165Z",
+                "valueUsd": "9.997520759857"
+              },
+              {
+                "at": "2026-10-21T01:36:22.704Z",
+                "valueUsd": "9.996294940474"
+              },
+              {
+                "at": "2026-10-21T01:37:23.839Z",
+                "valueUsd": "9.988922118832"
+              },
+              {
+                "at": "2026-10-21T01:38:25.007Z",
+                "valueUsd": "9.988965872497"
+              },
+              {
+                "at": "2026-10-21T01:39:26.137Z",
+                "valueUsd": "9.989924154596"
+              },
+              {
+                "at": "2026-10-21T01:40:27.368Z",
+                "valueUsd": "9.990144681413"
+              },
+              {
+                "at": "2026-10-21T01:41:28.527Z",
+                "valueUsd": "9.990449141213"
+              },
+              {
+                "at": "2026-10-21T01:42:30.280Z",
+                "valueUsd": "9.988629099458"
+              },
+              {
+                "at": "2026-10-21T01:43:31.530Z",
+                "valueUsd": "9.989289833764"
+              },
+              {
+                "at": "2026-10-21T01:44:32.674Z",
+                "valueUsd": "9.994752175218"
+              }
+            ],
+            "inRange": true,
+            "cashUsdc": "0.077548",
+            "equityUsd": "9.994752175218",
+            "solAmount": "0.042454397",
+            "stationId": 8,
+            "lowerPrice": "85.34299147706263",
+            "upperPrice": "128.02916021206252",
+            "residualSol": "0.000209636",
+            "principalSol": "0.042243463",
+            "allocationUsd": "10",
+            "entryCostUsdc": "9.922452",
+            "principalUsdc": "5.393195",
+            "accruedFeesSol": "0.000001298",
+            "accruedFeesUsd": "0.000264313126",
+            "entrySignature": "4og1j7QYep3KZEG7aSGjbpwoR6D4cSygtc4GZM3PDn2bNokx36mHFcAYGqDuC96uJ9f887ZcV2y6apZ25efuan2R",
+            "accruedFeesUsdc": "0.000126",
+            "positionAddress": "GmCZFFr96WxLefnXa93HyJ8UeSaYMsgkkYLcJwg7o7aL",
+            "executionEnabled": false
+          }
+        ],
+        "solPriceUsd": "106.558648688801",
+        "surplusUsdc": "0.000100",
+        "allocatedUsd": "20",
+        "valuationBasis": "SOL/USDC pool mark; USDC=$1. LP principal + accrued swap fees + residual cash/tokens. Operating fees, rent capital and future exit costs excluded from strategy P&L.",
+        "unallocatedUsdc": "80",
+        "unattributedSol": "0.000000000",
+        "disabledStations": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9,
+          10
+        ],
+        "unattributedUsdc": "0.000000"
+      },
+      "status": "ready",
+      "message": "Read-only sync connected",
+      "checkedAt": "2026-10-21T01:44:32.674Z",
+      "lastSuccessAt": "2026-10-21T01:44:32.674Z"
+    },
+    "generatedAt": "2026-10-21T01:44:32.674Z"
+  },
+  "meta": {
+    "stale": false,
+    "pollAfterMs": 30000,
+    "requestId": "9be745e6-73ca-49bd-87c5-4faab87c1711"
+  }
+}

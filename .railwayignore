@@ -1,0 +1,11 @@
+.git/
+.secrets/
+.env
+.env.*
+node_modules/
+**/node_modules/
+artifacts/
+docs/
+**/test-results/
+**/playwright-report/
+**/dist/

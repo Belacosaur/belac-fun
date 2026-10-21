@@ -1,0 +1,11 @@
+{
+  "chain": "solana",
+  "intendedNetwork": "mainnet-beta",
+  "publicAddress": "HBFn6VWPLNt44i8zqUoNs4mMtqyyxNTyWwQqfH5TBx8j",
+  "createdAt": "2026-10-20T12:07:42.032Z",
+  "purpose": "BELAC.FUN initial $100 experiment",
+  "fundingStatus": "not funded by this workflow",
+  "keypairFile": ".secrets/experiment-wallet.keypair.json",
+  "format": "Solana CLI 64-byte JSON keypair",
+  "verification": "Offline signature and stored-key round-trip passed"
+}
