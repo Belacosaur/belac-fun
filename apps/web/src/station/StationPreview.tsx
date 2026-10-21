@@ -67,7 +67,8 @@ export default function StationPreview() {
   const lending = observation?.data?.lending;
   const damm = observation?.data?.damm;
   const accounting = live.snapshot?.accounting?.data;
-  const value = station ? performance?.equityUsd ?? observation?.data?.valueUsd : accounting?.equityUsd;
+  const recovered = live.snapshot?.recovery?.complete;
+  const value = station ? performance?.equityUsd ?? observation?.data?.valueUsd : recovered ? live.snapshot?.wallet.data?.valueUsd : accounting?.equityUsd;
   const pnl = station ? performance?.pnlUsd ?? lending?.pnlUsd : accounting?.pnlUsd;
   const agentPose = station ? poses[focused - 1] : "none";
   return <StudioContext.Provider value={live}><div className="station-app room-app">
@@ -121,8 +122,8 @@ export default function StationPreview() {
     </nav>
     <footer className="studio-footer">
       <a className="trade-open" href="/recover">Exit and recover ↗</a>
-      <div className="footer-position">{station?.logo ? <img src={`/station/${station.logo}.png`} alt=""/> : <span className="footer-symbol">{station ? "?" : "◎"}</span>}<div><strong>{station?.provider ?? "The experiment"}</strong><span>{station ? statusLabel(observation, live.stale) : `${accounting?.feePool.availableSol ?? "—"} SOL fee reserve · separate`}</span></div></div>
-      <div className="footer-stat"><span>{station ? "POSITION + CASH" : "CHALLENGE EQUITY"}</span><strong>{moneyUsd(value)}</strong></div>
+      <div className="footer-position">{station?.logo ? <img src={`/station/${station.logo}.png`} alt=""/> : <span className="footer-symbol">{station ? "?" : "◎"}</span>}<div><strong>{station?.provider ?? "The experiment"}</strong><span>{station ? statusLabel(observation, live.stale) : recovered ? `${live.snapshot?.wallet.data?.sol ?? "—"} SOL · new wallet` : `${accounting?.feePool.availableSol ?? "—"} SOL fee reserve · separate`}</span></div></div>
+      <div className="footer-stat"><span>{station ? "POSITION + CASH" : recovered ? "NEW WALLET BALANCE" : "CHALLENGE EQUITY"}</span><strong>{moneyUsd(value)}</strong></div>
       <div className="footer-stat"><span>STRATEGY P&L</span><strong data-testid="strategy-pnl" className={pnl == null ? undefined : Number(pnl) < 0 ? "result-negative" : "result-positive"} title="Marked value minus starting allocation. Operating fees and future exit costs are separate.">{pnlMoney(pnl)}</strong></div>
       <div className="simulation-control"><button onClick={live.refresh}><span className={!live.stale ? "feed-dot active" : "feed-dot"}/>Refresh data<span aria-hidden="true">↻</span></button><span role="status">{feedLabel(live)}</span></div>
       <button className="positions-button" onClick={() => setPositionsOpen(!positionsOpen)} aria-expanded={positionsOpen}>All positions ↗</button>
@@ -137,9 +138,9 @@ export default function StationPreview() {
       <div className="positions-table"><table><thead><tr><th>Position / allocation</th><th>Value / P&L</th><th>Connection</th></tr></thead><tbody>{STATIONS.map((s) => {
         const observed = live.snapshot?.platforms.find((p) => p.id === s.id)?.observation;
         const p = observed?.data?.performance;
-        return <tr key={s.id}><td><button onClick={() => { onChoose(s.id); setPositionsOpen(false); }}>{s.logo && <img src={`/station/${s.logo}.png`} alt=""/>}<span>{s.provider}<small>{s.method}</small><small>{p ? `Allocation ${moneyUsd(p.allocationUsd)} · ${strategySummary(p)}` : observed?.message ?? "Connecting"}</small>{p?.stationId === 8 && <small>LP {p.principalSol} SOL + {p.principalUsdc} USDC · fees {p.accruedFeesSol} SOL + {p.accruedFeesUsdc} USDC<br/>Cash {p.cashUsdc} USDC + {p.residualSol} WSOL</small>}</span></button></td><td>{moneyUsd(p?.equityUsd)}<small className={p && Number(p.pnlUsd) < 0 ? "result-negative" : "result-positive"}>{pnlMoney(p?.pnlUsd)}</small></td><td><span>{connectionLabel(observed, live.stale)}</span><br/><small>{statusLabel(observed, live.stale)}</small><small>Execution off</small></td></tr>;
+        return <tr key={s.id}><td><button onClick={() => { onChoose(s.id); setPositionsOpen(false); }}>{s.logo && <img src={`/station/${s.logo}.png`} alt=""/>}<span>{s.provider}<small>{s.method}</small><small>{p ? `Allocation ${moneyUsd(p.allocationUsd)} · ${strategySummary(p)}` : observed?.message ?? "Connecting"}</small>{p?.stationId === 8 && <small>LP {p.principalSol} SOL + {p.principalUsdc} USDC · fees {p.accruedFeesSol} SOL + {p.accruedFeesUsdc} USDC<br/>Cash {p.cashUsdc} USDC + {p.residualSol} WSOL</small>}</span></button></td><td>{moneyUsd(p?.equityUsd ?? observed?.data?.valueUsd)}<small className={p && Number(p.pnlUsd) < 0 ? "result-negative" : "result-positive"}>{pnlMoney(p?.pnlUsd)}</small></td><td><span>{connectionLabel(observed, live.stale)}</span><br/><small>{statusLabel(observed, live.stale)}</small><small>Execution off</small></td></tr>;
       })}</tbody></table></div>
-      <p>{accounting?.valuationBasis ?? "Waiting for verified allocation data."} {accounting?.strategies.length ?? 0} confirmed positions are attributed. All automatic execution remains disabled. Ript is pending a custom challenge pack.</p>
+      <p>{recovered ? "All positions closed. Recovered funds are held in the new wallet." : accounting?.valuationBasis ?? "Waiting for verified allocation data."} {accounting?.strategies.length ?? 0} confirmed positions are attributed. All automatic execution remains disabled. Ript is pending a custom challenge pack.</p>
       {live.snapshot && <p><a href={`https://solscan.io/account/${live.snapshot.address}`} target="_blank" rel="noreferrer">{live.snapshot.address}</a><br/>Last sync: {new Date(live.snapshot.generatedAt).toLocaleString()}</p>}
       {Boolean(live.snapshot?.wallet.data?.unpricedAssets) && <p>Raw wallet assets include unpriced tokens or position NFTs. Strategy equity is calculated separately from verified position ownership and inventory.</p>}
       {live.snapshot?.wallet.data && live.snapshot.wallet.data.tokens.length > 0 && <div className="wallet-tokens"><h3>Wallet tokens</h3>{live.snapshot.wallet.data.tokens.map((token) => <p key={token.mint}>{token.amount} · <a href={`https://solscan.io/token/${token.mint}`} target="_blank" rel="noreferrer">{token.mint}</a></p>)}</div>}

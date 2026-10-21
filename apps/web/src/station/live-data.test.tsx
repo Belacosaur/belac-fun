@@ -7,6 +7,12 @@ import type { Observation, PlatformBalance } from "../../../../packages/contract
 afterEach(() => { vi.unstubAllGlobals(); });
 
 describe("live studio feed", () => {
+  it("labels completed recovery as closed instead of partial coverage or setup pending",()=>{
+    const observed={status:"empty",data:{closed:true,valueUsd:"0",positionCount:0,executionEnabled:false}} as Observation<PlatformBalance>;
+    expect(statusLabel(observed)).toBe("Closed");expect(connectionLabel(observed)).toBe("Execution disabled");
+    expect(feedLabel({snapshot:{recovery:{complete:true}} as never,stale:false,loading:false,error:false})).toBe("All positions closed · execution off");
+    expect(statusLabel(observed,true)).toBe("Stale / retrying");
+  });
   it("shows small real P&L without rounding it away or turning unknown data into zero", () => {
     expect(pnlMoney("0.00072")).toBe("+$0.0007");
     expect(pnlMoney("-0.0041")).toBe("−$0.0041");

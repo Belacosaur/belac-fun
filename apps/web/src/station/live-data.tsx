@@ -29,7 +29,7 @@ export function statusLabel(observation?: Observation<PlatformBalance>, stale = 
   if (!observation) return "Connecting";
   if (observation.status === "pending") return "Pending";
   if (stale || observation.status === "unavailable") return "Stale / retrying";
-  if (observation.data?.closed) return "Closed · recovered";
+  if (observation.data?.closed) return "Closed";
   if (observation.data?.damm?.state === "prepared") return "Prepared · execution off";
   if (observation.data?.lending?.state === "prepared") return "Prepared · execution off";
   if (observation.data?.lending?.state === "unattributed") return "Needs entry attribution";
@@ -42,12 +42,14 @@ export function connectionLabel(observation?: Observation<PlatformBalance>, stal
   if (!observation) return "Connecting";
   if (observation.status === "pending" || observation.status === "deferred") return "Pending";
   if (stale || observation.status === "unavailable") return "Read source unavailable";
+  if (observation.data?.closed) return "Execution disabled";
   const scope = observation.data?.connection?.scope;
   return scope ? { quotes: "Quotes connected", positions: "Position reader connected", portfolio: "Portfolio API connected", program_accounts: "Chain reader connected" }[scope] : "Setup pending";
 }
 export function feedLabel(live: Pick<LiveStudio, "snapshot" | "stale" | "loading" | "error">) {
   if (!live.snapshot) return live.error ? "Connection unavailable" : "Connecting to wallet";
   if (live.stale || live.error) return "Last known data · reconnecting";
+  if (live.snapshot.recovery?.complete) return "All positions closed · execution off";
   if (live.snapshot.accounting?.status === "unavailable") return "Position data stale · retrying";
   if (live.snapshot.accounting?.status === "ready") return `${live.snapshot.accounting.data?.strategies.length ?? 0} live positions · execution off`;
   if (live.snapshot.wallet.status === "unavailable") return "Wallet source unavailable";

@@ -90,6 +90,8 @@ export function paintOverview(texture: CanvasTexture, _histories: number[][], _r
   const c = (texture.image as HTMLCanvasElement).getContext("2d")!;
   const ink = "#263b32", muted = "#63736b", purple = "#8961cf";
   const accounting = live.snapshot?.accounting?.data;
+  const recovered = live.snapshot?.recovery?.complete;
+  const wallet = live.snapshot?.wallet.data;
   const stale = live.stale || live.snapshot?.accounting?.status === "unavailable";
   c.fillStyle = "#f6f5ef"; c.fillRect(0, 0, 2560, 1280);
   const text = (value: string, x: number, y: number, size: number, color = ink, weight = 400) => {
@@ -106,14 +108,14 @@ export function paintOverview(texture: CanvasTexture, _histories: number[][], _r
   text("THE EXPERIMENT / ALL TEN POSITIONS", 725, 96, 35, muted, 500);
   c.textAlign = "right"; text("MAINNET · READ ONLY", 2480, 96, 31, muted, 500); c.textAlign = "left";
   c.strokeStyle = "#dce1d6"; c.lineWidth = 2; c.beginPath(); c.moveTo(80, 158); c.lineTo(2480, 158); c.stroke();
-  text(`${stale ? "LAST KNOWN" : "CHALLENGE"} EQUITY · FEE POOL EXCLUDED`, 82, 226, 25, muted, 500);
-  text(moneyUsd(accounting?.equityUsd), 72, 374, 148, ink, 550);
+  text(recovered ? "NEW WALLET BALANCE · RECOVERY COMPLETE" : `${stale ? "LAST KNOWN" : "CHALLENGE"} EQUITY · FEE POOL EXCLUDED`, 82, 226, 25, muted, 500);
+  text(moneyUsd(recovered ? wallet?.valueUsd : accounting?.equityUsd), 72, 374, 148, ink, 550);
   text("STRATEGY P&L", 1060, 226, 30, muted, 500);
   text(pnlMoney(accounting?.pnlUsd), 1054, 335, 80, accounting && Number(accounting.pnlUsd) < 0 ? "#a15049" : ink, 500);
-  text(`${moneyUsd(accounting?.allocatedUsd)} allocated · ${moneyUsd(accounting?.unallocatedUsdc)} unallocated`, 1062, 378, 28, muted);
-  text("SEPARATE OPERATING RESERVE", 1900, 226, 27, muted, 500);
-  text(accounting ? `${Number(accounting.feePool.availableSol).toFixed(8)} SOL` : "—", 1894, 326, 52, ink, 500);
-  text("Network fees + rent tracked separately", 1900, 378, 27, muted);
+  text(recovered ? "$0.00 allocated · all positions closed" : `${moneyUsd(accounting?.allocatedUsd)} allocated · ${moneyUsd(accounting?.unallocatedUsdc)} unallocated`, 1062, 378, 28, muted);
+  text(recovered ? "RECOVERED SOL" : "SEPARATE OPERATING RESERVE", 1900, 226, 27, muted, 500);
+  text(recovered ? `${wallet?.sol ?? "—"} SOL` : accounting ? `${Number(accounting.feePool.availableSol).toFixed(8)} SOL` : "—", 1894, 326, 52, ink, 500);
+  text(recovered ? "No funds allocated · automation off" : "Network fees + rent tracked separately", 1900, 378, 27, muted);
   for (let col = 0; col < 2; col++) {
     const x = 80 + col * 1230;
     text("POSITION", x + 24, 459, 27, muted, 500);
@@ -132,12 +134,12 @@ export function paintOverview(texture: CanvasTexture, _histories: number[][], _r
     text(station.provider, x + 105, y + 48, station.provider.length > 14 ? 36 : 41, ink, 600);
     text(station.method, x + 105, y + 88, 29, muted);
     c.textAlign = "right";
-    text(moneyUsd(observation?.data?.performance?.equityUsd), x + 810, y + 69, 47, ink, 500);
-    text(observation?.data?.performance ? statusLabel(observation, live.stale) : station.id === 9 ? "Pending" : "Execution off", x + 1135, y + 69, 29, muted, 500);
+    text(moneyUsd(observation?.data?.performance?.equityUsd ?? observation?.data?.valueUsd), x + 810, y + 69, 47, ink, 500);
+    text(statusLabel(observation, live.stale), x + 1135, y + 69, 29, muted, 500);
     c.textAlign = "left";
   }
   c.fillStyle = "#e9e3f3"; c.fillRect(0, 1170, 2560, 110);
-  text(accounting ? `Operating costs ${accounting.feePool.networkFeesSol} SOL · account capital ${accounting.feePool.accountCapitalSol} SOL` : "Waiting for verified allocation data", 80, 1239, 29, ink, 500);
+  text(recovered ? "Recovery complete · fees and rent recorded in recovery history" : accounting ? `Operating costs ${accounting.feePool.networkFeesSol} SOL · account capital ${accounting.feePool.accountCapitalSol} SOL` : "Waiting for verified allocation data", 80, 1239, 29, ink, 500);
   c.textAlign = "right";
   text(feedLabel(live), 2480, 1239, 29, muted, 500);
   c.textAlign = "left";
