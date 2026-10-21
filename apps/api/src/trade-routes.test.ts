@@ -1,9 +1,18 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import Fastify from "fastify";
 import { registerTradeRoutes } from "./trade-routes.js";
 import type { TradeStore } from "../../jobs/src/trade-store.js";
 import { CHALLENGE_WALLET } from "../../../packages/contracts/src/trades.js";
 import {RECOVERY_SOURCE} from "../../../packages/contracts/src/recovery.js";
+it("relays only authenticated block-height reads and never a transaction or caller-chosen RPC",async()=>{
+ const app=Fastify();const fetcher=vi.fn(async(input:unknown)=>{expect(input).toBe("https://api.mainnet-beta.solana.com");return new Response(JSON.stringify({result:12345}));});vi.stubGlobal("fetch",fetcher);
+ try{registerTradeRoutes(app,null,"https://belac.fun",{authorized:async(_o:string,t:string)=>t==="owner"} as unknown as TradeStore);
+ const request=(payload:object,token="owner")=>app.inject({method:"POST",url:"/v1/trades/read",headers:{origin:"https://belac.fun",authorization:`Bearer ${token}`},payload});
+ expect((await request({method:"getBlockHeight",params:[{commitment:"confirmed"}]},"")).statusCode).toBe(401);
+ await request({method:"sendTransaction",params:["wire"]});await request({method:"getBlockHeight",params:[{commitment:"confirmed"}],url:"https://other.invalid"});expect(fetcher).not.toHaveBeenCalled();
+ expect((await request({method:"getBlockHeight",params:[{commitment:"confirmed"}]})).json().data).toBe(12345);expect(fetcher.mock.calls[0]?.[0]).toBe("https://api.mainnet-beta.solana.com");
+ }finally{await app.close();vi.unstubAllGlobals();}
+});
 it("issues trade logins only for the new wallet and keeps preparation disabled by default",async()=>{
  const app=Fastify();let challenges=0,created=0;
  const store={authorized:async()=>true,challenge:async()=>{challenges++;return {wallet:CHALLENGE_WALLET};},create:async()=>{created++;}} as unknown as TradeStore;

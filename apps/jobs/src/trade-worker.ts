@@ -18,7 +18,7 @@ export async function startTradePreparation(pool: pg.Pool, endpoint: string, api
       for (const t of await store.pending()) {
         if (!t.plan) continue;
         try {
-          const height = await rpc<number>("getBlockHeight", [{ commitment: "finalized" }]);
+          const height = await tradeRpc("https://api.mainnet-beta.solana.com")<number>("getBlockHeight", [{ commitment: "finalized" }]);
           if (!t.signature) {
             // The frontend may have closed during signing. Never automatically retry a potentially signed message.
             if (height > t.plan.lastValidBlockHeight + 32) {

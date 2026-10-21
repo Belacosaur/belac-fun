@@ -9,6 +9,7 @@ export interface MeteoraPlan {
   liquidity: string; maxSolAtoms: string; maxSpendUsdcAtoms: string; maxSwapUsdcAtoms: string; maxDepositUsdcAtoms: string;
   simulatedSpendUsdcAtoms: string; principalSolAtoms: string; principalUsdcAtoms: string; residualWsolAtoms: string;
   rentLamports: string; feeLamports: string; feePoolBeforeLamports: string; feePoolAfterLamports: string;
+  setupWsol?: boolean; setupRentLamports?: string;
   beforeUsdcAtoms: string; beforeWsolAtoms: string; beforeNativeLamports: string;
   lowerPrice: string; upperPrice: string; minimumCashUsdcAtoms: string;
 }

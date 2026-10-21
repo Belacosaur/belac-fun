@@ -49,7 +49,11 @@ export function connectionLabel(observation?: Observation<PlatformBalance>, stal
 export function feedLabel(live: Pick<LiveStudio, "snapshot" | "stale" | "loading" | "error">) {
   if (!live.snapshot) return live.error ? "Connection unavailable" : "Connecting to wallet";
   if (live.stale || live.error) return "Last known data · reconnecting";
-  if (live.snapshot.recovery?.complete) return "All positions closed · execution off";
+  if (live.snapshot.recovery?.complete) {
+    if(live.snapshot.platforms?.some(p=>p.observation.status==="unavailable"))return "Position data stale · retrying";
+    const active=live.snapshot.platforms?.filter(p=>(p.observation.data?.positionCount??0)>0).length??0;
+    return active?`${active} live positions · execution off`:"All positions closed · execution off";
+  }
   if (live.snapshot.accounting?.status === "unavailable") return "Position data stale · retrying";
   if (live.snapshot.accounting?.status === "ready") return `${live.snapshot.accounting.data?.strategies.length ?? 0} live positions · execution off`;
   if (live.snapshot.wallet.status === "unavailable") return "Wallet source unavailable";

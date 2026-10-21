@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type pg from "pg";
 import { z } from "zod";
 import { TradeStore } from "../../jobs/src/trade-store.js";
+import {tradeRpc} from "../../jobs/src/trade-rpc.js";
 import { CHALLENGE_WALLET } from "../../../packages/contracts/src/trades.js";
 const idSchema = z.string().uuid(), key = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
 type Store = Pick<TradeStore, "challenge" | "login" | "authorized" | "latest" | "create" | "get" | "begin" | "register" | "cancel">;
@@ -22,6 +23,7 @@ export function registerTradeRoutes(app: FastifyInstance, pool: pg.Pool | null, 
       const b = z.object({ id: idSchema, signature: z.string().max(100) }).strict().parse(req.body);
       try { return { data: await store!.login(req.headers.origin!, b.id, b.signature) }; } catch { return reply.code(401).send({ error: "Wallet signature is invalid, expired or already used" }); }
     });
+    instance.post("/v1/trades/read",async(req)=>{const b=z.object({method:z.literal("getBlockHeight"),params:z.tuple([z.object({commitment:z.enum(["confirmed","finalized"])}).strict()])}).strict().parse(req.body);return {data:await tradeRpc("https://api.mainnet-beta.solana.com")(b.method,b.params)};});
     instance.get("/v1/trades/meteora/latest", async () => ({ data: await store!.latest() }));
     instance.get("/v1/trades/status",async()=>({data:{wallet:CHALLENGE_WALLET,budgetUsdc:"10",automatedExecutionEnabled:false,preparationEnabled:preparationEnabled&&!recoveryMode,feePoolSeparate:true}}));
     instance.post("/v1/trades/meteora/prepare", async (req, reply) => {

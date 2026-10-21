@@ -208,7 +208,13 @@ export async function syncStudio(address: string, rpcUrl: string, previous?: Stu
   if(options.recovery){
     const effectiveAddress=options.recovery.complete?options.recovery.inventory.destination:address;
     const base:StudioSnapshot={version:1,address:effectiveAddress,network:"mainnet-beta",generatedAt:now,wallet:await observe(()=>walletBalance(effectiveAddress,rpcUrl),previous?.wallet,now),platforms:CHALLENGE.map(s=>({id:s.id,strategyKey:s.key,provider:s.provider,source:connections[s.key].source,observation:{status:"needs_setup",checkedAt:now,lastSuccessAt:null,data:null,message:"Recovery in progress"}}))};
-    return applyRecoveryTracking(base,options.recovery.inventory,options.recovery.complete);
+    let active:Parameters<typeof applyRecoveryTracking>[3];
+    if(options.recovery.complete&&options.meteoraReceipt){
+      if(options.meteoraReceipt.wallet!==effectiveAddress)throw new Error("Meteora receipt is not owned by the migrated wallet");
+      const prior=previous?.address===effectiveAddress?previous.platforms.find(p=>p.id===5)?.observation:undefined;
+      active={wallet:effectiveAddress,observation:await observe(()=>readMeteoraPosition(effectiveAddress,rpcUrl,options.meteoraReceipt!,prior?.data?.performance,now),prior?.data?.performance?prior:undefined,now)};
+    }
+    return applyRecoveryTracking(base,options.recovery.inventory,options.recovery.complete,active);
   }
   const walletPromise = observe(() => walletBalance(address, rpcUrl), previous?.wallet, now);
   const priorKamino = previous?.platforms.find(p => p.id === 6 && p.strategyKey === "kamino-usdc-lending")?.observation;

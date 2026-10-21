@@ -28,6 +28,11 @@ it("attributes a simulated finalized receipt from transaction deltas and exact m
   expect(receipt.spentUsdcAtoms).toBe(f.plan.simulatedSpendUsdcAtoms); expect(receipt.residualWsolAtoms).toBe(f.plan.residualWsolAtoms);
   expect(receipt.rentLamports).toBe("7223760"); expect(receipt.feeLamports).toBe("11000");
 });
+it("accepts a missing pre-entry WSOL balance only when setup was explicitly reviewed",async()=>{
+ const faked=chainFixture();faked.tx.meta.preTokenBalances=faked.tx.meta.preTokenBalances.filter(r=>r.mint!==DAMM.sol);
+ await expect(verifyMeteoraReceipt({...f.plan,setupWsol:true,setupRentLamports:"1488440"},faked.signature,faked.rpc)).resolves.toBeDefined();
+ await expect(verifyMeteoraReceipt(f.plan,faked.signature,faked.rpc)).rejects.toThrow();
+});
 it("rejects mismatched messages, missing NFTs and excessive principal", async () => {
   const faked = chainFixture(); await expect(verifyMeteoraReceipt({ ...f.plan, messageHash: "bad" }, faked.signature, faked.rpc)).rejects.toThrow();
   faked.tx.meta.postTokenBalances.pop(); await expect(verifyMeteoraReceipt(f.plan, faked.signature, faked.rpc)).rejects.toThrow();

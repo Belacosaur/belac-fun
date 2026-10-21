@@ -19,7 +19,7 @@ export async function verifyMeteoraReceipt(plan: MeteoraPlan, signature: string,
   assert.equal(keys[0], plan.wallet); const m = tx.meta;
   const amount = (rows: TokenRow[], key: string, mint: string, required = true) => { const r = rows.find(r => r.accountIndex === keys.indexOf(key)); if (!r) { assert(!required); return 0n; } assert.equal(r.owner, plan.wallet); assert.equal(r.mint, mint); assert(/^\d+$/.test(r.uiTokenAmount.amount)); return BigInt(r.uiTokenAmount.amount); };
   const beforeUsdc = amount(m.preTokenBalances, METEORA_ACCOUNTS.usdc, DAMM.usdc), afterUsdc = amount(m.postTokenBalances, METEORA_ACCOUNTS.usdc, DAMM.usdc);
-  const beforeWsol = amount(m.preTokenBalances, METEORA_ACCOUNTS.wsol, DAMM.sol), afterWsol = amount(m.postTokenBalances, METEORA_ACCOUNTS.wsol, DAMM.sol);
+  const beforeWsol = amount(m.preTokenBalances, METEORA_ACCOUNTS.wsol, DAMM.sol,!plan.setupWsol), afterWsol = amount(m.postTokenBalances, METEORA_ACCOUNTS.wsol, DAMM.sol);
   const spent = beforeUsdc - afterUsdc, residual = afterWsol - beforeWsol;
   assert(spent > 0n && spent <= 10000000n && spent <= BigInt(plan.maxSpendUsdcAtoms)); assert(residual >= 0n); assert(beforeWsol >= METEORA_ACCOUNTS.orcaWsol);
   assert.equal(amount(m.postTokenBalances, plan.nft, plan.mint), 1n);
