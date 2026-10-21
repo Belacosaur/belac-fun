@@ -50,3 +50,11 @@ SOL is retained as WSOL to separate investment exposure from native operating SO
 `STATION_PREPARATION_ENABLED=true` enables these unsigned review routes. `EXECUTION_ENABLED=false` remains unchanged. Meteora preparation can be disabled now that its one challenge position is active. Entries are prepared on demand by the API; the sync worker independently reconciles and tracks them. The background execution worker has no signing or broadcasting capability.
 
 Reference protocols: [Jupiter owner signing and confirmation](https://developers.jup.ag/docs/swap/v1/send-swap-transaction), [Orca documentation](https://docs.orca.so/), and the pinned Kamino/Orca program layouts used in the adapters.
+
+## Release status
+
+Implementation commit `89af23f` is pushed to `main`. Final verification: 339 unit/integration tests, the real-browser queue check, typechecks, lint and both builds passed. Independent review findings for stale Orca valuations and orphaned unsigned preparations were fixed and regression tested.
+
+The release is **not deployed yet**. At 07:46 UTC on 21 October, Railway rejected the API upload with `Deploys have been paused temporarily`; its [official status page](https://status.railway.com/) reported builds paused from 07:24 UTC across all build regions. Flag updates were also rejected and must be verified when service resumes. No replacement deployment ID was created. The Cloudflare production frontend was deliberately kept on its existing release so it does not expose controls against an older API.
+
+The existing public snapshot remains healthy on the new wallet with only Meteora active. No new transactions were signed or submitted. Resume by setting the API's unsigned-preparation flag, deploying API and sync-worker, verifying their exact successful deployment IDs and disabled execution state, then publishing the verified frontend. Disable old Meteora preparation on API/execution-worker; leave `EXECUTION_ENABLED=false` everywhere. Never treat an upload request or a pending build as successful publication.
