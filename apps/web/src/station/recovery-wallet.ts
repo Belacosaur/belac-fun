@@ -1,6 +1,7 @@
 import * as k from "@solana/kit";
 import {RECOVERY_SOURCE as SOURCE,RECOVERY_DESTINATION as DEST,type RecoveryPlan} from "../../../../packages/contracts/src/recovery";
 import {decode64,encode64,digest} from "./trade-wallet";
+import {simulateRecoveryAccounts} from "../../../../packages/contracts/src/recovery-simulation";
 const TOKEN="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",TOKEN22="TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",SYS="11111111111111111111111111111111",BUDGET="ComputeBudget111111111111111111111111111111";
 const POOL="Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",WHIRL="whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",KAMINO="KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD";
 const USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",SOL="So11111111111111111111111111111111111111112",USA="8DDPMR9LcM7YaHfwq41TteyGpnFi222gCgDEZUuy5PmE",WSA="G5gUmEtvsE2RAj9gFSDP5ZgZ5WW4CeNRchj3r8fE4uvf",CTA="Ezb8iGvPbVKFN2tF6wrRermeo47qDXTWXQWMiUYLeAYx";
@@ -92,7 +93,7 @@ export async function verifyRecoveryContext(p:RecoveryPlan,readToken?:string){
  }
  if(p.step==="swap")check(BigInt(p.minimumSolAtoms)>=BigInt(p.before.usdcAtoms)*Q*Q/(sqrt*sqrt)*99n/100n,"Swap minimum is too low");
  const fee=await recoveryRpc<{value:number}>("getFeeForMessage",[encode64(k.getTransactionDecoder().decode(decode64(p.wireBase64)).messageBytes),{commitment:"confirmed"}]);check(String(fee.value)===p.feeLamports);
- const sim=await recoveryRpc<{value:{err:unknown;accounts:(Account|null)[]}}>("simulateTransaction",[p.wireBase64,{encoding:"base64",sigVerify:false,replaceRecentBlockhash:false,commitment:"confirmed",minContextSlot:minSlot,accounts:{encoding:"base64",addresses:keys}}]);
+ const sim=await simulateRecoveryAccounts<Account>((method,params)=>recoveryRpc(method,params,readToken),p.wireBase64,keys,minSlot);
  check(sim.value.err===null,"Fresh browser simulation failed");const post=sim.value.accounts;
  check(String(post[1]?.lamports??0)===(p.step==="sweep"?(BigInt(p.before.destinationLamports)+BigInt(p.before.sourceLamports)-BigInt(p.feeLamports)).toString():p.before.destinationLamports));
  if(p.step==="orca")check(closed(post[5]!)&&closed(post[6]!)&&closed(post[7]!)&&amount(post[2]!,USDC)>=BigInt(p.before.usdcAtoms)+BigInt(p.minimumUsdcAtoms)&&amount(post[3]!,SOL)>=BigInt(p.before.wsolAtoms)+BigInt(p.minimumSolAtoms));

@@ -6,6 +6,7 @@ import * as k from "@solana/kit";
 import { ACTIVE_ENTRIES as E } from "./active-positions.js";
 import { KAMINO_DIRECT as K, decodeKaminoReserve, receiptValueUsdcAtoms } from "./kamino-direct.js";
 import { tradeRpc, type TradeRpc } from "./trade-rpc.js";
+import {simulateRecoveryAccounts} from "../../../packages/contracts/src/recovery-simulation.js";
 import { RECOVERY_SOURCE, RECOVERY_DESTINATION, type RecoveryInventory, type RecoveryPlan, type RecoveryStep } from "../../../packages/contracts/src/recovery.js";
 export { RECOVERY_DESTINATION };
 const sdk = createRequire(createRequire(import.meta.url).resolve("@orca-so/whirlpools"));
@@ -118,8 +119,7 @@ export async function buildRecoveryPlan(id: string, endpoint: string, fetcher: t
   assert.equal(message.header.numSignerAccounts,1); assert.equal(message.staticAccounts[0],RECOVERY_SOURCE);
   const wire = Buffer.concat([Buffer.from([1]),Buffer.alloc(64),bytes]); assert(wire.length<=1232,"Recovery transaction exceeds packet size");
   const extra = closed.filter(a=>!RECOVERY_KEYS.includes(a)); const simKeys=[...RECOVERY_KEYS,...extra];
-  const sim=await rpc<{context:{slot:number};value:{err:unknown;accounts:(Account|null)[];logs:string[]}}>("simulateTransaction",[wire.toString("base64"),{encoding:"base64",sigVerify:false,replaceRecentBlockhash:false,commitment:"confirmed",accounts:{encoding:"base64",addresses:simKeys}}]);
-  if(sim.value.err) throw new Error(`Recovery simulation failed: ${JSON.stringify(sim.value.err)} ${sim.value.logs.slice(-3).join(" ")}`);
+  const sim=await simulateRecoveryAccounts<Account>(rpc,wire.toString("base64"),simKeys,b.context.slot);
   const after = inventory(sim.value.accounts.slice(0,8),sim.context.slot,step==="cleanup"?[]:undefined);
   assert.equal(after.destinationLamports,step==="sweep"?(BigInt(before.destinationLamports)+BigInt(before.sourceLamports)-BigInt(fee)).toString():before.destinationLamports);
   if(step==="orca"){assert(!after.orcaOpen);assert(BigInt(after.usdcAtoms)>=BigInt(before.usdcAtoms)+minimumUsdc);assert(BigInt(after.wsolAtoms)>=BigInt(before.wsolAtoms)+minimumSol);}
