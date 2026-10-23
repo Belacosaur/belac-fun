@@ -72,7 +72,7 @@ export function useLiveStudio(): LiveStudio {
     const controller = new AbortController();
     async function poll() {
       try {
-        const base = (import.meta.env.VITE_API_BASE_URL || "https://belac-fun-production-c49e.up.railway.app").replace(/\/$/, "");
+        const base = (import.meta.env.VITE_API_BASE_URL || "https://api.belac.fun").replace(/\/$/, "");
         const response = await fetch(`${base}/v1/studio`, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(12_000)]) });
         if (!response.ok) throw new Error("Sync unavailable");
         const body = await response.json() as StudioResponse;

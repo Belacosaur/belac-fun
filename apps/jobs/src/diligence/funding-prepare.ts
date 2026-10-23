@@ -106,7 +106,7 @@ try {
     note: "Remainder covers base/priority/failed-transaction costs and closing headroom. Funding sender may pay the USDC ATA rent; do not charge it a second time. Rent recovery is lifecycle-conditional; unspent reserve is not an expense." };
   if (positionCapital + commonAtas + missingArrays + fee.value >= 30000000) throw new Error("Chosen operating reserve insufficient");
   let live: Row | undefined;
-  try { live = await get("https://belac-fun-production-c49e.up.railway.app/v1/studio"); }
+  try { live = await get("https://api.belac.fun/v1/studio"); }
   catch (error) { report.publicApiIdentityGap = error instanceof Error ? error.message : "API unavailable"; }
   if (live) {
     if (row(live.data).address !== wallet) throw new Error("Public API wallet mismatch");

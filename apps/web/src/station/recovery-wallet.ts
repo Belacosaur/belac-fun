@@ -15,7 +15,7 @@ const view=(b:Uint8Array|k.ReadonlyUint8Array)=>new DataView(new Uint8Array(b).b
 export async function recoveryRpc<T>(method:string,params:unknown[],readToken?:string):Promise<T>{
  check(["getGenesisHash","getMultipleAccounts","getBlockHeight","getFeeForMessage","simulateTransaction","sendTransaction","getTokenAccountsByOwner"].includes(method));
  const relayed=method==="getTokenAccountsByOwner"||method==="getBlockHeight";
- const api=(import.meta.env.VITE_API_BASE_URL||"https://belac-fun-production-c49e.up.railway.app").replace(/\/$/,"");
+ const api=(import.meta.env.VITE_API_BASE_URL||"https://api.belac.fun").replace(/\/$/,"");
  const endpoint=relayed?`${api}/v1/recovery/read`:"https://solana-rpc.publicnode.com";
  const r=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json",...(relayed?{authorization:`Bearer ${readToken??""}`}:{})},body:JSON.stringify(relayed?{method,params}:{jsonrpc:"2.0",id:1,method,params}),signal:AbortSignal.timeout(25000)});const j=await r.json();check(r.ok&&!j.error,"RPC unavailable; check the saved attempt before retrying");return (relayed?j.data:j.result) as T;
 }

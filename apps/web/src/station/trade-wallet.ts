@@ -9,7 +9,7 @@ const check = (v: unknown, message = "Transaction differs from the reviewed Mete
 const program = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG", token = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", router = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
 const usdc = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", sol = "So11111111111111111111111111111111111111112", usdcAta = TRADE_TOKEN_ACCOUNTS.usdc, wsolAta = TRADE_TOKEN_ACCOUNTS.wsol;
 export async function browserRpc<T>(method: "getGenesisHash" | "getBlockHeight" | "getMultipleAccounts" | "getFeeForMessage" | "simulateTransaction" | "sendTransaction", params: unknown[], readToken?: string): Promise<T> {
-  const relayed=method==="getBlockHeight",api=(import.meta.env.VITE_API_BASE_URL||"https://belac-fun-production-c49e.up.railway.app").replace(/\/$/,"");
+  const relayed=method==="getBlockHeight",api=(import.meta.env.VITE_API_BASE_URL||"https://api.belac.fun").replace(/\/$/,"");
   const endpoint = relayed?`${api}/v1/trades/read`:import.meta.env.VITE_SOLANA_RPC_URL || "https://solana-rpc.publicnode.com";
   const r = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json",...(relayed?{authorization:`Bearer ${readToken??""}`}:{}) }, body: JSON.stringify(relayed?{method,params}:{ jsonrpc: "2.0", id: 1, method, params }), signal: AbortSignal.timeout(20000) });
   if (!r.ok) throw new Error("Wallet RPC unavailable"); const j = await r.json(); if (j.error) throw new Error("RPC did not confirm submission. Check the recorded attempt before retrying."); return (relayed?j.data:j.result) as T;

@@ -5,7 +5,7 @@ import {RECOVERY_SOURCE,RECOVERY_DESTINATION,type RecoveryAttempt,type RecoveryI
 import {decode64,encode64} from "./trade-wallet";
 import {recoveryRpc,validateRecoveryPlan,verifyRecoveryContext,verifyRecoverySignature} from "./recovery-wallet";
 import "./recovery.css";
-const api=(import.meta.env.VITE_API_BASE_URL||"https://belac-fun-production-c49e.up.railway.app").replace(/\/$/,"");
+const api=(import.meta.env.VITE_API_BASE_URL||"https://api.belac.fun").replace(/\/$/,"");
 const sol=(s:string|undefined)=>(Number(s??0)/1e9).toFixed(9),usdc=(s:string|undefined)=>(Number(s??0)/1e6).toFixed(6);
 const steps:Record<RecoveryStep,string>={orca:"Close Orca",kamino:"Redeem Kamino",swap:"Convert USDC to SOL",cleanup:"Unwrap SOL and reclaim rent",sweep:"Sweep to the new wallet"};
 type Status={inventory:RecoveryInventory;attempt:RecoveryAttempt|null;history:{id:string;state:string;step:RecoveryStep;signature:string|null;receipt?:{feeLamports:string;rentRecoveredLamports:string}|null}[]};

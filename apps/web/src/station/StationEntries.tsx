@@ -14,7 +14,7 @@ interface Features {
  "solana:signTransaction":{signTransaction(input:{account:WalletAccount;transaction:Uint8Array;chain:"solana:mainnet"}):Promise<readonly {signedTransaction:Uint8Array}[]>};
 }
 interface Queue {wallet:string;enabled:boolean;automatedExecutionEnabled:false;attempts:StationEntryAttempt[]}
-const api=(import.meta.env.VITE_API_BASE_URL||"https://belac-fun-production-c49e.up.railway.app").replace(/\/$/,"");
+const api=(import.meta.env.VITE_API_BASE_URL||"https://api.belac.fun").replace(/\/$/,"");
 const usdc=(value:string)=>`${(Number(value)/1e6).toFixed(6)} USDC`,sol=(value:string)=>`${(Number(value)/1e9).toFixed(9)} SOL`;
 const terminal=new Set(["confirmed","failed","expired","cancelled"]);
 export function StationEntries({onClose,onRefresh}:{onClose():void;onRefresh():void}){

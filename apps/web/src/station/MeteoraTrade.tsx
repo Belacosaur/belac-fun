@@ -10,7 +10,7 @@ interface Features {
   "solana:signMessage": { signMessage(input: { account: WalletAccount; message: Uint8Array }): Promise<readonly { signature: Uint8Array }[]> };
   "solana:signTransaction": { signTransaction(input: { account: WalletAccount; transaction: Uint8Array; chain: "solana:mainnet" }): Promise<readonly { signedTransaction: Uint8Array }[]> };
 }
-const api = (import.meta.env.VITE_API_BASE_URL || "https://belac-fun-production-c49e.up.railway.app").replace(/\/$/, "");
+const api = (import.meta.env.VITE_API_BASE_URL || "https://api.belac.fun").replace(/\/$/, "");
 const usdc = (atoms?: string) => atoms ? (Number(atoms) / 1e6).toFixed(6) : "—", sol = (atoms?: string) => atoms ? (Number(atoms) / 1e9).toFixed(9) : "—";
 export function MeteoraTrade({ onClose, onRefresh }: { onClose(): void; onRefresh(): void }) {
   const [wallets, setWallets] = useState<readonly Wallet[]>([]), [selection, setSelection] = useState("");

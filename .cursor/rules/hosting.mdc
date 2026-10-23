@@ -1,0 +1,24 @@
+---
+description: Where belac-fun is hosted and how to deploy it
+alwaysApply: true
+---
+
+# belac-fun hosting
+
+Railway is closed. Ignore any Railway config or `*.up.railway.app` URLs.
+
+## Frontend (Cloudflare)
+- belac.fun: Cloudflare Pages project `belac-fun` (direct upload of `apps/web`, Vite). It calls https://api.belac.fun.
+- Build `apps/web` with the API URL set to api.belac.fun before uploading; older repo defaults may still name Railway.
+
+## Backend (AWS)
+- AWS project belacfun, account 717954157841, profile `belacfun`, region ap-southeast-2, ECS cluster `belacfun`.
+- Services: `belac-fun` (API, api.belac.fun via a Cloudflare Tunnel sidecar), `belac-sync-worker`, `belac-execution-worker`, `belac-research-worker` (workers on Fargate Spot).
+- CycleLab (`cyclelab-api`, `cyclelab-worker`) also lives in this cluster; both are switched off (desired 0).
+- Images in ECR `belac-fun` and `cyclelab`.
+
+## Database
+- RDS `belacfun-postgres`, database `belac_fun`. The master password is the RDS-managed secret; do not set it by hand.
+
+## Config
+- Secrets Manager `belac/*` (`belac/belac-fun-env`, `belac/belac-*-worker-env`). Never print values.
