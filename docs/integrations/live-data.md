@@ -1,3 +1,5 @@
+> Historical design / deployment record. Not current operational instructions. Production is now a public-read-only native archive; consult the repository-root DEPLOYMENT.md. Do not reactivate old services or trading flows.
+
 # Live studio connections
 
 Implemented 20 October 2026; active-position valuation added 21 October. Read-only; no trading or signing key is deployed.

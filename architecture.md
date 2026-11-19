@@ -1,3 +1,5 @@
+> Historical design / deployment record. Not current operational instructions. Production is now a public-read-only native archive; consult the repository-root DEPLOYMENT.md. Do not reactivate old services or trading flows.
+
 # BELAC.FUN — END-TO-END TECHNICAL ARCHITECTURE
 **Version:** 1.0 | **Date:** 20 October 2026 | **Status:** Implementation blueprint
 

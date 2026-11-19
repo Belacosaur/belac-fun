@@ -1,3 +1,5 @@
+> **Current operation:** public-read-only archive. Trading and workers remain off. See [deployment and release boundaries](DEPLOYMENT.md); historical live-experiment descriptions below are not instructions to reactivate them.
+
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/belac-mark-dark.svg">
@@ -92,7 +94,7 @@ pnpm --filter @belac/web dev --host 127.0.0.1
 
 Open `http://127.0.0.1:5173/station`. The studio's read-only feed defaults to the public AWS API. To use another backend, set `VITE_API_BASE_URL` in a local environment file; keep credentials out of all `VITE_*` variables because those values are public in the browser.
 
-This starts the frontend. Running the backend or database locally requires separate configuration; use `.env.example` as a variable reference and `docker-compose.yml` for the local development database. Production uses AWS, not the older Railway setup described in historical notes.
+This starts the frontend. Running the backend or database locally requires separate configuration; use `.env.example` as a variable reference and `docker-compose.yml` for the local development database. Current production uses the separate native Windows public archive; see DEPLOYMENT.md.
 
 </details>
 

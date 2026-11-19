@@ -1,3 +1,5 @@
+> Historical design / deployment record. Not current operational instructions. Production is now a public-read-only native archive; consult the repository-root DEPLOYMENT.md. Do not reactivate old services or trading flows.
+
 # Transaction preparation service
 
 Current scope, 21 October 2026: the existing service prepares unsigned Meteora entry transactions and reconciles user-submitted signatures. Financial execution remains disabled on the server. The owner signs and submits from the frontend wallet. See [Meteora wallet flow](meteora-wallet-flow.md).

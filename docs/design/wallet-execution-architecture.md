@@ -1,3 +1,5 @@
+> Historical design / deployment record. Not current operational instructions. Production is now a public-read-only native archive; consult the repository-root DEPLOYMENT.md. Do not reactivate old services or trading flows.
+
 # Wallet approved strategy execution architecture
 
 ## Purpose and proposed approach
