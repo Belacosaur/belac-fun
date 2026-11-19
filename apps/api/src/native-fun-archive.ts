@@ -1,6 +1,5 @@
 import { randomUUID } from "node:crypto";
 import Fastify, { type FastifyInstance } from "fastify";
-import { z } from "zod";
 import { registerPublicRoutes } from "./public-routes.js";
 import type { Database } from "./queries.js";
 import { registerSecurity } from "./security.js";
