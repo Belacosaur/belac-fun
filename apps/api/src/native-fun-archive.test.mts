@@ -1,18 +1,19 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import type { Database } from "./queries.js";
 import { buildNativeFunArchiveApp } from "./native-fun-archive.js";
 
 const rows = [
   { id: "fixture", slug: "fixture", name: "Fixture", state: "active", is_illustrative: false },
 ];
-const db = { async query(sql) {
+const db = { async query(sql: string) {
   if (/from campaigns\s/i.test(sql)) return { rows };
   if (/distinct on/i.test(sql)) return { rows: [{slug:"entry",state:"active",provider_name:"Fixture",equity_usd:"10",pnl_usd:"2",pnl_pct:"20"}] };
   if (/from valuation_snapshots v/i.test(sql)) return { rows: [{challenge_id:"one",equity_usd:"10",observed_at:new Date("2026-01-01T00:00:00Z")}] };
   throw new Error("Unexpected SQL");
 }};
 test("homepage contract and access boundaries", async () => {
-  const app = buildNativeFunArchiveApp(db, {archiveAt:"2026-01-01T00:00:00Z"});
+  const app = buildNativeFunArchiveApp(db as unknown as Database, {archiveAt:"2026-01-01T00:00:00Z"});
   try {
     const current = await app.inject("/v1/campaigns/current");
     assert.equal(current.statusCode, 200);
