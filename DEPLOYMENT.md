@@ -37,8 +37,7 @@ From `apps/api`, after the frozen-lockfile install:
 
 ```sh
 pnpm exec esbuild src/native-fun-archive-entry.ts --bundle --platform=node --format=esm --banner:js="import { createRequire as cr } from 'node:module'; const require=cr(import.meta.url);" --outfile=dist/native-fun-archive.mjs
-pnpm exec esbuild src/native-fun-archive.test.mts --bundle --platform=node --format=esm --banner:js="import { createRequire as cr } from 'node:module'; const require=cr(import.meta.url);" --outfile=dist/native-fun-archive.test.mjs
-node --test dist/native-fun-archive.test.mjs
+pnpm exec vitest run src/native-fun-archive.test.mts
 ```
 
 Do not use `--packages=external`: the Windows runtime must not depend on developer package-store junctions. Do not execute the entrypoint during tests. The fixture is in-process with a mock database; it verifies public response contracts and denial of private/mutation routes. It does not prove production parity or reboot recovery. Generated bundles and migration data are never committed.

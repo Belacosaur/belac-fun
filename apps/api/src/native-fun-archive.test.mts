@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test } from "vitest";
 import type { Database } from "./queries.js";
 import { buildNativeFunArchiveApp } from "./native-fun-archive.js";
 
